@@ -1,5 +1,5 @@
 from display_abstract import DisplayAbstract
-from controllers_abstract import ControllersAbstract
+from controllers.controllers_abstract import ControllersAbstract
 
 
 class MainDisplay(DisplayAbstract):

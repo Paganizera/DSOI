@@ -1,4 +1,4 @@
-from app import App
+from entities.app import App
 
 
 if __name__ == '__main__':

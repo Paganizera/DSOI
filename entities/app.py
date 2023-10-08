@@ -1,7 +1,7 @@
-from users_controller import UsersController
-from chats_controller import ChatsController
-from controllers_abstract import ControllersAbstract
-from main_display import MainDisplay
+from controllers.users_controller import UsersController
+from controllers.chats_controller import ChatsController
+from controllers.controllers_abstract import ControllersAbstract
+from displays.main_display import MainDisplay
 
 
 class App(ControllersAbstract):

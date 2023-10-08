@@ -1,6 +1,6 @@
 from controllers_abstract import ControllersAbstract
-from user import User
-from users_display import UsersDisplay
+from entities.user import User
+from displays.users_display import UsersDisplay
 
 
 class UsersController(ControllersAbstract):

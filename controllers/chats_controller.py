@@ -1,7 +1,7 @@
 from controllers_abstract import ControllersAbstract
-from chat import Chat
-from chat_list_display import ChatListDisplay
-from chat_messages_display import ChatMessagesDisplay
+from entities.chat import Chat
+from displays.chat_list_display import ChatListDisplay
+from displays.chat_messages_display import ChatMessagesDisplay
 
 
 class ChatsController(ControllersAbstract):

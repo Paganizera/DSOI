@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from controllers_abstract import ControllersAbstract
+from controllers.controllers_abstract import ControllersAbstract
 from subprocess import call
 from platform import system
 

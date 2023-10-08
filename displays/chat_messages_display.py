@@ -1,6 +1,7 @@
 from display_abstract import DisplayAbstract
-from controllers_abstract import ControllersAbstract
-from chat import Chat
+from controllers.controllers_abstract import ControllersAbstract
+from entities.chat import Chat
+
 
 class ChatMessagesDisplay(DisplayAbstract):
     def __init__(self, controller: ControllersAbstract) -> None:
