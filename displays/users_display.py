@@ -1,7 +1,7 @@
 from .display_abstract import DisplayAbstract
 from controllers.controllers_abstract import ControllersAbstract
 from getpass import getpass
-
+from errors.custom_errors import invalid_option_error
 
 class UsersDisplay(DisplayAbstract):
     def __init__(self, controller: ControllersAbstract) -> None:
@@ -22,7 +22,7 @@ class UsersDisplay(DisplayAbstract):
             option = input('Option: ').strip()
             
             if not self.is_valid_input(option, range(1, 4)):
-                print('Invalid option!')
+                raise invalid_option_error()
             else:
                 return option
 
@@ -37,7 +37,7 @@ class UsersDisplay(DisplayAbstract):
             option = input('Option: ').strip()
 
             if not self.is_valid_input(option, range(1, 6)):
-                print('Invalid option!')
+                raise invalid_option_error()
             else:
                 return option
 

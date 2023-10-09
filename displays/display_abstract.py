@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from controllers.controllers_abstract import ControllersAbstract
 from subprocess import call
 from platform import system
-
+from errors.custom_errors import invalid_option_error
 
 class DisplayAbstract(ABC):
     def __init__(self, controller: ControllersAbstract):
@@ -53,8 +53,8 @@ class DisplayAbstract(ABC):
             elif option == 'n':
                 return False
             else:
-                print('Invalid option!')
-
+                raise invalid_option_error()
+            
     def show_message(self, message: str) -> None:
         print(message)
 
