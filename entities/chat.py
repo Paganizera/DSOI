@@ -7,13 +7,11 @@ from history.image_message import ImageMessage
 
 class Chat:
     def __init__(self, name: str, creator_user: User) -> None:
-        if not isinstance(name, str):
-            raise TypeError(f"Expected str, got {type(name)}")
-        if not isinstance(creator_user, User):
-            raise TypeError(f"Expected User, got {type(creator_user)}")
+        self.__check_name(name)
+        self.__check_creator_user(creator_user)
         self.__name: str = name
         self.__creator_user: User = creator_user
-        self.__id = uuid4()
+        self.__id: UUID = uuid4()
         self.__users: list[User] = []
 
     @property
@@ -34,6 +32,29 @@ class Chat:
     def id(self) -> UUID:
         return self.__id
     
+    @property
+    def users(self) -> list[User]:
+        return self.__users
+    
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Chat):
+            return False
+        return self.__id == other.id and self.__name == other.name
+
+    def user_in_chat(self, user: User) -> bool:
+        if not isinstance(user, User):
+            raise TypeError(f"Expected User, got {type(user)}")
+        for u in self.__users:
+            if u == user:
+                return True
+        return False
+
+    def change_creator_user(self) -> None:
+        for user in self.__users:
+            if user != self.__creator_user:
+                self.__creator_user = user
+                return
+
     def add_user(self, user: User) -> None:
         if not isinstance(user, User):
             raise TypeError(f"Expected User, got {type(user)}")
@@ -79,3 +100,13 @@ class Chat:
         path = ...
         message = VideoMessage(path)
         #print(self.__create_message_prefix(user) + message)
+
+    def __check_name(self, name: str):
+        if not isinstance(name, str):
+            raise TypeError('Name must be a string')
+        if len(name) < 3:
+            raise ValueError('Name must be at least 3 characters long')
+
+    def __check_creator_user(self, creator_user: User):
+        if not isinstance(creator_user, User):
+            raise TypeError('Creator user must be a User object')

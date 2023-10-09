@@ -22,6 +22,8 @@ class UsersController(ControllersAbstract):
 
     def exit(self) -> None:
         if self.__current_user is None:
+            # A user should not be able to go back to the main menu if he 
+            # is not logged in, hence we exit the program
             self.__app.exit()
         self.__app.open_screen()
 
@@ -49,9 +51,7 @@ class UsersController(ControllersAbstract):
 
     def __do_password_validation(self) -> bool:
         password = self.__display.get_current_password()
-        if password != self.__current_user.password:
-            return False
-        return True
+        return password == self.__current_user.password
     
     def login(self) -> None:
         nickname, password = self.__display.get_data()
@@ -69,9 +69,9 @@ class UsersController(ControllersAbstract):
     def logout(self) -> None:
         if self.__current_user is None:
             self.__display.show_error('User not logged')
-        else:
-            self.__current_user = None
-            self.__display.show_message('User logged out')
+            return
+        self.__current_user = None
+        self.__display.show_message('User logged out')
     
     def sign_in(self) -> None:
         nickname, password = self.__display.get_data()
@@ -87,38 +87,38 @@ class UsersController(ControllersAbstract):
                 break
         if not flag:
             self.__display.show_error('User already exists')
-        else:
-            self.__users.append(user)
-            self.__current_user = user
-            self.__display.show_message('User created')
+            return
+        self.__users.append(user)
+        self.__current_user = user
+        self.__display.show_message('User created')
 
     def update(self) -> None:
         if self.__current_user is None:
             self.__display.show_error('User not logged')
-        else:
-            nickname, password = self.__display.get_data()
-            self.__current_user.nickname = nickname
-            self.__current_user.password = password
-            self.__display.show_message('User updated')
+            return
+        nickname, password = self.__display.get_data()
+        self.__current_user.nickname = nickname
+        self.__current_user.password = password
+        self.__display.show_message('User updated')
 
     def remove(self) -> None:
         if self.__current_user is None:
             self.__display.show_error('User not logged')
-        else:
-            if self.__display.y_n_question('Are you sure you want to delete your account?'):
-                if not self.__do_password_validation():
-                    self.__display.show_error('Invalid password')
-                    return
-
-                self.__users.remove(self.__current_user)
-                self.__current_user = None
-                self.__display.show_message('User removed successfully')
+            return
+        if not self.__display.y_n_question('Are you sure you want to delete your account?'):
+            return
+        if not self.__do_password_validation():
+            self.__display.show_error('Invalid password')
+            return
+        self.__users.remove(self.__current_user)
+        self.__current_user = None
+        self.__display.show_message('User removed successfully')
     
     def show_user_data(self) -> None:
         if self.__current_user is None:
             self.__display.show_error('User not logged')
-        else:
-            if not self.__do_password_validation():
-                self.__display.show_error('Invalid password')
-                return
-            self.__display.show_user_data(self.__current_user.nickname, self.__current_user.password)
+            return
+        if not self.__do_password_validation():
+            self.__display.show_error('Invalid password')
+            return
+        self.__display.show_user_data(self.__current_user.nickname, self.__current_user.password)

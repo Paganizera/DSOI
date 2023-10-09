@@ -2,6 +2,7 @@ from controllers.users_controller import UsersController
 from controllers.chats_controller import ChatsController
 from controllers.controllers_abstract import ControllersAbstract
 from displays.main_display import MainDisplay
+from entities.user import User
 
 
 class App(ControllersAbstract):
@@ -26,3 +27,6 @@ class App(ControllersAbstract):
 
     def start(self) -> None:
         self.__users_controller.open_screen()
+
+    def get_current_user(self) -> User | None:
+        return self.__users_controller.current_user

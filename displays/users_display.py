@@ -10,9 +10,12 @@ class UsersDisplay(DisplayAbstract):
         
         super().__init__(controller)
 
+    def show_display_header(self) -> None:
+        return super().show_display_header('Users Menu')
+
     def show_options(self) -> str:
         while True:
-            self.show_display_header('Users Menu')
+            self.show_display_header()
             print('\t1 - Login')
             print('\t2 - Sign in')
             print('\t3 - Exit')
@@ -25,7 +28,7 @@ class UsersDisplay(DisplayAbstract):
 
     def show_options_logged(self) -> str:
         while True:
-            self.show_display_header('Users Menu')
+            self.show_display_header()
             print('\t1 - Logout')
             print('\t2 - Update user info')
             print('\t3 - Show user data')
@@ -49,9 +52,3 @@ class UsersDisplay(DisplayAbstract):
     def show_user_data(self, nickname: str, password: str) -> None:
         print(f'Nickname: \"{nickname}\"')
         print(f'Password: \"{password}\"')
-        
-    def show_message(self, message: str) -> None:
-        print(message)
-
-    def show_error(self, error: str) -> None:
-        print('ERROR: '+ error)

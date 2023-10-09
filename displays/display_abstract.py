@@ -54,3 +54,9 @@ class DisplayAbstract(ABC):
                 return False
             else:
                 print('Invalid option!')
+
+    def show_message(self, message: str) -> None:
+        print(message)
+
+    def show_error(self, error: str) -> None:
+        print('ERROR: '+ error)
