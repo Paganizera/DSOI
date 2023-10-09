@@ -44,3 +44,13 @@ class DisplayAbstract(ABC):
             return False
         
         return True
+
+    def y_n_question(self, msg: str) -> bool:
+        while True:
+            option = input(msg + ' [y/n]: ').lower().strip()
+            if option == 'y':
+                return True
+            elif option == 'n':
+                return False
+            else:
+                print('Invalid option!')
