@@ -21,14 +21,17 @@ class UsersController(ControllersAbstract):
         return self.__users
 
     def exit(self) -> None:
+        if self.__current_user is None:
+            self.__app.exit()
         self.__app.open_screen()
 
     def open_screen(self) -> None:
         options_logged = {
             '1': self.logout,
             '2': self.update,
-            '3': self.remove,
-            '4': self.exit
+            '3': self.show_user_data,
+            '4': self.remove,
+            '5': self.exit
         }
         options_not_logged = {
             '1': self.login,
@@ -43,7 +46,13 @@ class UsersController(ControllersAbstract):
                 option = self.__display.show_options_logged()
                 options_logged[option]()
             self.__display.enter_to_continue()
-                
+
+    def __do_password_validation(self) -> bool:
+        password = self.__display.get_current_password()
+        if password != self.__current_user.password:
+            return False
+        return True
+    
     def login(self) -> None:
         nickname, password = self.__display.get_data()
         flag = False
@@ -53,27 +62,31 @@ class UsersController(ControllersAbstract):
                 flag = True
                 break
         if not flag:
-            self.__display.show_message('User not found')
+            self.__display.show_error('User not found')
         else:
             self.__display.show_message('User logged')
     
     def logout(self) -> None:
         if self.__current_user is None:
-            self.__display.show_message('User not logged')
+            self.__display.show_error('User not logged')
         else:
             self.__current_user = None
             self.__display.show_message('User logged out')
     
     def sign_in(self) -> None:
         nickname, password = self.__display.get_data()
-        user = User(nickname, password)
+        try:
+            user = User(nickname, password)
+        except Exception as e:
+            self.__display.show_error(str(e))
+            return
         flag = True
         for _user in self.__users:
             if user == _user:
                 flag = False
                 break
         if not flag:
-            self.__display.show_message('User already exists')
+            self.__display.show_error('User already exists')
         else:
             self.__users.append(user)
             self.__current_user = user
@@ -81,7 +94,7 @@ class UsersController(ControllersAbstract):
 
     def update(self) -> None:
         if self.__current_user is None:
-            self.__display.show_message('User not logged')
+            self.__display.show_error('User not logged')
         else:
             nickname, password = self.__display.get_data()
             self.__current_user.nickname = nickname
@@ -90,19 +103,22 @@ class UsersController(ControllersAbstract):
 
     def remove(self) -> None:
         if self.__current_user is None:
-            self.__display.show_message('User not logged')
+            self.__display.show_error('User not logged')
         else:
             if self.__display.y_n_question('Are you sure you want to delete your account?'):
                 if not self.__do_password_validation():
-                    self.__display.show_message('Invalid password')
+                    self.__display.show_error('Invalid password')
                     return
 
                 self.__users.remove(self.__current_user)
                 self.__current_user = None
                 self.__display.show_message('User removed successfully')
     
-    def __do_password_validation(self) -> bool:
-        password = self.__display.get_current_password()
-        if password != self.__current_user.password:
-            return False
-        return True
+    def show_user_data(self) -> None:
+        if self.__current_user is None:
+            self.__display.show_error('User not logged')
+        else:
+            if not self.__do_password_validation():
+                self.__display.show_error('Invalid password')
+                return
+            self.__display.show_user_data(self.__current_user.nickname, self.__current_user.password)

@@ -3,18 +3,19 @@ from uuid import UUID, uuid4
 
 class User:
     def __init__(self, nickname: str, password: str) -> None:
+        self.__check_nickname(nickname)
+        self.__check_password(password)
         self.__nickname = nickname
         self.__password = password
         self.__id = uuid4()
-    
+
     @property
     def nickname(self) -> str:
         return self.__nickname
 
     @nickname.setter
     def nickname(self, nickname: str) -> None:
-        if not isinstance(nickname, str):
-            raise TypeError('Nickname must be a string')
+        self.__check_nickname(nickname)
         self.__nickname = nickname
     
     @property
@@ -23,8 +24,7 @@ class User:
 
     @password.setter
     def password(self, password: str) -> None:
-        if not isinstance(password, str):
-            raise TypeError('Password must be a string')
+        self.__check_password(password)
         self.__password = password
     
     @property
@@ -35,3 +35,15 @@ class User:
         if not isinstance(other, User):
             return False
         return self.__id == other.id or self.__nickname == other.nickname
+
+    def __check_nickname(self, nickname: str) -> None:
+        if not isinstance(nickname, str):
+            raise TypeError('Nickname must be a string')
+        if len(nickname) < 3:
+            raise ValueError('Nickname must be at least 3 characters long')
+
+    def __check_password(self, password: str) -> None:
+        if not isinstance(password, str):
+            raise TypeError('Password must be a string')
+        if len(password) < 6:
+            raise ValueError('Password must be at least 6 characters long')
