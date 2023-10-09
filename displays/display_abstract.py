@@ -20,7 +20,7 @@ class DisplayAbstract(ABC):
 
     def show_display_header(self, header: str) -> None:
         self.__clear_screen()
-        n = 30
+        n = 50
         print('-' * n)
         print('{:^{n}}'.format(header, n=n))
         print('-' * n)
