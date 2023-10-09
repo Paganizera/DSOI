@@ -1,4 +1,4 @@
-from controllers_abstract import ControllersAbstract
+from .controllers_abstract import ControllersAbstract
 from entities.chat import Chat
 from displays.chat_list_display import ChatListDisplay
 from displays.chat_messages_display import ChatMessagesDisplay

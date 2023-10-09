@@ -1,4 +1,4 @@
-from base_message import BaseMessage
+from .base_message import BaseMessage
 
 
 class TextMessage(BaseMessage):

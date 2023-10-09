@@ -1,4 +1,4 @@
-from controllers_abstract import ControllersAbstract
+from .controllers_abstract import ControllersAbstract
 from entities.user import User
 from displays.users_display import UsersDisplay
 

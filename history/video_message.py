@@ -1,4 +1,4 @@
-from media_message import MediaMessage
+from .media_message import MediaMessage
 
 
 class VideoMessage(MediaMessage):
