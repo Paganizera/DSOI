@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from controllers.controllers_abstract import ControllersAbstract
 from subprocess import call
 from platform import system
-from errors.custom_errors import invalid_option_error
+
 
 class DisplayAbstract(ABC):
     def __init__(self, controller: ControllersAbstract):

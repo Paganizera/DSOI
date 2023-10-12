@@ -1,6 +1,6 @@
 from .display_abstract import DisplayAbstract
 from controllers.controllers_abstract import ControllersAbstract
-from errors.custom_errors import invalid_option_error
+from errors.custom_errors import InvalidOptionError
 
 class MainDisplay(DisplayAbstract):
     def __init__(self, controller: ControllersAbstract) -> None:
@@ -17,5 +17,5 @@ class MainDisplay(DisplayAbstract):
         option = input('Option: ')
 
         if not self.is_valid_input(option, range(1, 4)):
-            raise invalid_option_error()
+            raise InvalidOptionError()
         return option

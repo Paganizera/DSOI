@@ -2,7 +2,7 @@ from .controllers_abstract import ControllersAbstract
 from entities.chat import Chat
 from displays.chat_list_display import ChatListDisplay
 from displays.chat_messages_display import ChatMessagesDisplay
-from errors.custom_errors import invalid_option_error
+from errors.custom_errors import InvalidOptionError
 
 
 class ChatsController(ControllersAbstract):
@@ -55,14 +55,14 @@ class ChatsController(ControllersAbstract):
             if self.__current_chat is None:
                 try:
                     option = self.__chat_list_display.show_options()
-                except invalid_option_error as e:
+                except InvalidOptionError as e:
                     self.__chat_list_display.show_error(str(e))
                 else:
                     chat_list_options[option]()
             else:
                 try:
                     option = self.__chat_messages_display.show_options(self.__current_chat)
-                except invalid_option_error as e:
+                except InvalidOptionError as e:
                     self.__chat_messages_display.show_error(str(e))
                 else:
                     chat_options[option]()
@@ -108,7 +108,7 @@ class ChatsController(ControllersAbstract):
             return
         try:
             index = self.__chat_list_display.get_user_chat_index(chats)
-        except invalid_option_error as e:
+        except InvalidOptionError as e:
             self.__chat_list_display.show_error(str(e))
             return
         if index == -1:
@@ -130,7 +130,7 @@ class ChatsController(ControllersAbstract):
             return
         try:
             index = self.__chat_list_display.get_chat_index(self.__chats)
-        except invalid_option_error as e:
+        except InvalidOptionError as e:
             self.__chat_list_display.show_error(str(e))
             return
         if index == -1:  # operation canceled

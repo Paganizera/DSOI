@@ -1,7 +1,7 @@
 from .display_abstract import DisplayAbstract
 from controllers.controllers_abstract import ControllersAbstract
 from getpass import getpass
-from errors.custom_errors import invalid_option_error
+from errors.custom_errors import InvalidOptionError
 from uuid import UUID
 
 class UsersDisplay(DisplayAbstract):
@@ -22,7 +22,7 @@ class UsersDisplay(DisplayAbstract):
         option = input('Option: ').strip()
         
         if not self.is_valid_input(option, range(1, 4)):
-            raise invalid_option_error()
+            raise InvalidOptionError()
         return option
 
     def show_options_logged(self) -> str:
@@ -35,7 +35,7 @@ class UsersDisplay(DisplayAbstract):
         option = input('Option: ').strip()
 
         if not self.is_valid_input(option, range(1, 6)):
-            raise invalid_option_error()
+            raise InvalidOptionError()
         return option
 
     def get_data(self) -> tuple[str, str]:

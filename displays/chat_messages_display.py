@@ -1,7 +1,7 @@
 from .display_abstract import DisplayAbstract
 from controllers.controllers_abstract import ControllersAbstract
 from entities.chat import Chat
-from errors.custom_errors import invalid_option_error
+from errors.custom_errors import InvalidOptionError
 
 
 class ChatMessagesDisplay(DisplayAbstract):
@@ -23,7 +23,7 @@ class ChatMessagesDisplay(DisplayAbstract):
         option = input('Option: ').strip()
 
         if not self.is_valid_input(option, range(1, 5)):
-            raise invalid_option_error()
+            raise InvalidOptionError()
         return option
 
     def show_messages(chat: Chat) -> None:

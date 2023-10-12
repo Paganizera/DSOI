@@ -1,7 +1,7 @@
 from .display_abstract import DisplayAbstract
 from controllers.controllers_abstract import ControllersAbstract
 from entities.chat import Chat
-from errors.custom_errors import invalid_option_error
+from errors.custom_errors import InvalidOptionError
 
 class ChatListDisplay(DisplayAbstract):
     def __init__(self, controller: ControllersAbstract) -> None:
@@ -28,7 +28,7 @@ class ChatListDisplay(DisplayAbstract):
         option = input('Option: ').strip()
 
         if not self.is_valid_input(option, range(1, 6)):
-            raise invalid_option_error()
+            raise InvalidOptionError()
         return option
 
     def get_chat_index(self, chats: list[Chat]) -> int:
@@ -40,7 +40,7 @@ class ChatListDisplay(DisplayAbstract):
             if index == '0':
                 return -1
             if not self.is_valid_input(index, range(1, len(chats)+1)):
-                raise invalid_option_error()
+                raise InvalidOptionError()
             else:
                 index = int(index) - 1  # Adjusting to list index
                 return index
@@ -52,7 +52,7 @@ class ChatListDisplay(DisplayAbstract):
             if index == '0':
                 return -1
             if not self.is_valid_input(index, range(1, len(chats)+1)):
-                raise invalid_option_error()
+                raise InvalidOptionError()
             index = int(index) - 1  # Adjusting to list index
             return index
 

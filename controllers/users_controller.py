@@ -1,7 +1,7 @@
 from .controllers_abstract import ControllersAbstract
 from entities.user import User
 from displays.users_display import UsersDisplay
-from errors.custom_errors import invalid_option_error
+from errors.custom_errors import InvalidOptionError
 
 
 class UsersController(ControllersAbstract):
@@ -45,14 +45,14 @@ class UsersController(ControllersAbstract):
             if self.__current_user is None:
                 try:
                     option = self.__display.show_options()
-                except invalid_option_error as e:
+                except InvalidOptionError as e:
                     self.__display.show_error(str(e))
                 else:
                     options_not_logged[option]()
             else:
                 try:
                     option = self.__display.show_options_logged()
-                except invalid_option_error as e:
+                except InvalidOptionError as e:
                     self.__display.show_error(str(e))
                 else:
                     options_logged[option]()
