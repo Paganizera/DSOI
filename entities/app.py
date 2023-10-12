@@ -3,6 +3,7 @@ from controllers.chats_controller import ChatsController
 from controllers.controllers_abstract import ControllersAbstract
 from displays.main_display import MainDisplay
 from entities.user import User
+from errors.custom_errors import invalid_option_error
 
 
 class App(ControllersAbstract):
@@ -18,8 +19,12 @@ class App(ControllersAbstract):
             '3': self.exit
         }
         while True:
-            option = self.__display.show_options()
-            options[option]()
+            try:
+                option = self.__display.show_options()
+            except invalid_option_error as e:
+                self.__display.show_error(str(e))
+            else:
+                options[option]()
             self.__display.enter_to_continue()
 
     def exit(self):

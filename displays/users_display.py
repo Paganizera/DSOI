@@ -14,32 +14,28 @@ class UsersDisplay(DisplayAbstract):
         return super().show_display_header('Users Menu')
 
     def show_options(self) -> str:
-        while True:
-            self.show_display_header()
-            print('\t1 - Login')
-            print('\t2 - Sign in')
-            print('\t3 - Exit')
-            option = input('Option: ').strip()
-            
-            if not self.is_valid_input(option, range(1, 4)):
-                raise invalid_option_error()
-            else:
-                return option
+        self.show_display_header()
+        print('\t1 - Login')
+        print('\t2 - Sign in')
+        print('\t3 - Exit')
+        option = input('Option: ').strip()
+        
+        if not self.is_valid_input(option, range(1, 4)):
+            raise invalid_option_error()
+        return option
 
     def show_options_logged(self) -> str:
-        while True:
-            self.show_display_header()
-            print('\t1 - Logout')
-            print('\t2 - Update user info')
-            print('\t3 - Show user data')
-            print('\t4 - Delete user')
-            print('\t5 - Go to main menu')
-            option = input('Option: ').strip()
+        self.show_display_header()
+        print('\t1 - Logout')
+        print('\t2 - Update user info')
+        print('\t3 - Show user data')
+        print('\t4 - Delete user')
+        print('\t5 - Go to main menu')
+        option = input('Option: ').strip()
 
-            if not self.is_valid_input(option, range(1, 6)):
-                raise invalid_option_error()
-            else:
-                return option
+        if not self.is_valid_input(option, range(1, 6)):
+            raise invalid_option_error()
+        return option
 
     def get_data(self) -> tuple[str, str]:
         nickname = input('Nickname: ').strip()

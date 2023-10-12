@@ -1,6 +1,7 @@
 from .controllers_abstract import ControllersAbstract
 from entities.user import User
 from displays.users_display import UsersDisplay
+from errors.custom_errors import invalid_option_error
 
 
 class UsersController(ControllersAbstract):
@@ -42,11 +43,19 @@ class UsersController(ControllersAbstract):
         }
         while True:
             if self.__current_user is None:
-                option = self.__display.show_options()
-                options_not_logged[option]()
+                try:
+                    option = self.__display.show_options()
+                except invalid_option_error as e:
+                    self.__display.show_error(str(e))
+                else:
+                    options_not_logged[option]()
             else:
-                option = self.__display.show_options_logged()
-                options_logged[option]()
+                try:
+                    option = self.__display.show_options_logged()
+                except invalid_option_error as e:
+                    self.__display.show_error(str(e))
+                else:
+                    options_logged[option]()
             self.__display.enter_to_continue()
 
     def __do_password_validation(self) -> bool:

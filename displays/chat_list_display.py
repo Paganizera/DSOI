@@ -18,21 +18,18 @@ class ChatListDisplay(DisplayAbstract):
         return super().show_display_header('Chat List Menu')
     
     def show_options(self) -> str:
-        while True:
-            self.show_display_header()
-            print('\t1 - Add chat')
-            #print('\t2 - Remove chat')
-            print('\t2 - Open chat')
-            print('\t3 - Your chats')
-            print('\t4 - Browse chats')
-            print('\t5 - Exit')
-            option = input('Option: ').strip()
+        self.show_display_header()
+        print('\t1 - Add chat')
+        #print('\t2 - Remove chat')
+        print('\t2 - Open chat')
+        print('\t3 - Your chats')
+        print('\t4 - Browse chats')
+        print('\t5 - Exit')
+        option = input('Option: ').strip()
 
-            if not self.is_valid_input(option, range(1, 6)):
-                raise invalid_option_error()
-            else:
-                return option
-
+        if not self.is_valid_input(option, range(1, 6)):
+            raise invalid_option_error()
+        return option
 
     def get_chat_index(self, chats: list[Chat]) -> int:
         while True:

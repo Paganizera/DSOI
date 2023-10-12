@@ -2,6 +2,7 @@ from .controllers_abstract import ControllersAbstract
 from entities.chat import Chat
 from displays.chat_list_display import ChatListDisplay
 from displays.chat_messages_display import ChatMessagesDisplay
+from errors.custom_errors import invalid_option_error
 
 
 class ChatsController(ControllersAbstract):
@@ -52,11 +53,19 @@ class ChatsController(ControllersAbstract):
         }
         while True:
             if self.__current_chat is None:
-                option = self.__chat_list_display.show_options()
-                chat_list_options[option]()
+                try:
+                    option = self.__chat_list_display.show_options()
+                except invalid_option_error as e:
+                    self.__chat_list_display.show_error(str(e))
+                else:
+                    chat_list_options[option]()
             else:
-                option = self.__chat_messages_display.show_options(self.__current_chat)
-                chat_options[option]()
+                try:
+                    option = self.__chat_messages_display.show_options(self.__current_chat)
+                except invalid_option_error as e:
+                    self.__chat_messages_display.show_error(str(e))
+                else:
+                    chat_options[option]()
             self.__chat_list_display.enter_to_continue()
 
     def exit(self) -> None:
@@ -143,6 +152,7 @@ class ChatsController(ControllersAbstract):
         elif len(chat.users) == 1:
             if self.__chat_messages_display.y_n_question('You are the only user in this chat. Do you want to remove it?'):
                 self.__chats.remove(chat)
+                self.__chat_messages_display.show_message('Chat removed')
             else:
                 self.__chat_messages_display.show_message('Chat not removed')
                 return

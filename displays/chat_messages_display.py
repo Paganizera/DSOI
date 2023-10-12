@@ -15,18 +15,16 @@ class ChatMessagesDisplay(DisplayAbstract):
         return super().show_display_header(f'Chat: {chat.name} ({len(chat.users)} users) [id: {chat.id}]')
 
     def show_options(self, chat: Chat) -> str:
-        while True:
-            self.show_display_header(chat)
-            print('\t1 - Send message')
-            print('\t2 - Chat history')
-            print('\t3 - Close chat')
-            print('\t4 - Exit chat')
-            option = input('Option: ').strip()
+        self.show_display_header(chat)
+        print('\t1 - Send message')
+        print('\t2 - Chat history')
+        print('\t3 - Close chat')
+        print('\t4 - Exit chat')
+        option = input('Option: ').strip()
 
-            if not self.is_valid_input(option, range(1, 5)):
-                raise invalid_option_error()
-            else:
-                return option
+        if not self.is_valid_input(option, range(1, 5)):
+            raise invalid_option_error()
+        return option
 
     def show_messages(chat: Chat) -> None:
         pass
