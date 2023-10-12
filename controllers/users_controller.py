@@ -124,10 +124,11 @@ class UsersController(ControllersAbstract):
         self.__display.show_message('User removed successfully')
     
     def show_user_data(self) -> None:
-        if self.__current_user is None:
+        curr = self.__current_user
+        if curr is None:
             self.__display.show_error('User not logged')
             return
         if not self.__do_password_validation():
             self.__display.show_error('Invalid password')
             return
-        self.__display.show_user_data(self.__current_user.nickname, self.__current_user.password)
+        self.__display.show_user_data(curr.nickname, curr.password, curr.id)

@@ -2,6 +2,7 @@ from .display_abstract import DisplayAbstract
 from controllers.controllers_abstract import ControllersAbstract
 from getpass import getpass
 from errors.custom_errors import invalid_option_error
+from uuid import UUID
 
 class UsersDisplay(DisplayAbstract):
     def __init__(self, controller: ControllersAbstract) -> None:
@@ -45,6 +46,7 @@ class UsersDisplay(DisplayAbstract):
     def get_current_password(self) -> str:
         return getpass('Current password: ')
 
-    def show_user_data(self, nickname: str, password: str) -> None:
-        print(f'Nickname: \"{nickname}\"')
-        print(f'Password: \"{password}\"')
+    def show_user_data(self, nickname: str, password: str, id: UUID) -> None:
+        print(f'\tNickname: \'{nickname}\'')
+        print(f'\tPassword: \'{password}\'')
+        print(f'\tId      : \'{id}\'')
