@@ -1,4 +1,4 @@
-from entities.app import App
+from controllers.app import App
 
 
 if __name__ == '__main__':
