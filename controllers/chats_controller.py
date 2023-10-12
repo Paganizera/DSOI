@@ -106,7 +106,11 @@ class ChatsController(ControllersAbstract):
         if chats == []:
             self.__chat_list_display.show_message('No chats to open')
             return
-        index = self.__chat_list_display.get_user_chat_index(chats)
+        try:
+            index = self.__chat_list_display.get_user_chat_index(chats)
+        except invalid_option_error as e:
+            self.__chat_list_display.show_error(str(e))
+            return
         if index == -1:
             return
         self.__current_chat = chats[index]
@@ -124,13 +128,18 @@ class ChatsController(ControllersAbstract):
         if self.__chats == []:
             self.__chat_list_display.show_message('No chats to show')
             return
-        index = self.__chat_list_display.get_chat_index(self.__chats)
-        if index == -1:
+        try:
+            index = self.__chat_list_display.get_chat_index(self.__chats)
+        except invalid_option_error as e:
+            self.__chat_list_display.show_error(str(e))
             return
-        if self.__chats[index].user_in_chat(self.__app.get_current_user()):
+        if index == -1:  # operation canceled
+            return
+        chat = self.__chats[index]
+        if chat.user_in_chat(self.__app.get_current_user()):
             self.__chat_list_display.show_message('You are already in this chat')
             return
-        self.__chats[index].add_user(self.__app.get_current_user())
+        chat.add_user(self.__app.get_current_user())
         self.__chat_list_display.show_message('Chat joined')
 
     def send_message(self) -> None:
