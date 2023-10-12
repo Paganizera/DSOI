@@ -21,14 +21,14 @@ class ChatListDisplay(DisplayAbstract):
         while True:
             self.show_display_header()
             print('\t1 - Add chat')
-            print('\t2 - Remove chat')
-            print('\t3 - Open chat')
-            print('\t4 - Your chats')
-            print('\t5 - Browse chats')
-            print('\t6 - Exit')
+            #print('\t2 - Remove chat')
+            print('\t2 - Open chat')
+            print('\t3 - Your chats')
+            print('\t4 - Browse chats')
+            print('\t5 - Exit')
             option = input('Option: ').strip()
 
-            if not self.is_valid_input(option, range(1, 7)):
+            if not self.is_valid_input(option, range(1, 6)):
                 raise invalid_option_error()
             else:
                 return option

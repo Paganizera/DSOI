@@ -38,11 +38,11 @@ class ChatsController(ControllersAbstract):
     def open_screen(self) -> None:
         chat_list_options = {
             '1': self.add_chat,
-            '2': self.remove_chat,
-            '3': self.open_my_chat,
-            '4': self.your_chats,
-            '5': self.browse_chats,
-            '6': self.exit
+            #'2': self.remove_chat,
+            '2': self.open_my_chat,
+            '3': self.your_chats,
+            '4': self.browse_chats,
+            '5': self.exit
         }
         chat_options = {
             '1': self.send_message,
@@ -76,20 +76,21 @@ class ChatsController(ControllersAbstract):
         self.__chats.append(chat)
         self.__chat_list_display.show_message('Chat created')
 
-    def remove_chat(self) -> None:
-        chats = self.__get_chats_user_is_in()
-        if chats == []:
-            self.__chat_list_display.show_message('No chats to remove')
-            return
-        index = self.__chat_list_display.get_user_chat_index(chats)
-        if index == -1:
-            return
-        chat = self.__chats[index]
-        if chat.creator_user != self.__app.get_current_user():
-            self.__chat_list_display.show_error('Only the creator can remove the chat')
-            return
-        del self.__chats[index]
-        self.__chat_list_display.show_message('Chat removed')
+    # removes chat from list, not from users
+    # def remove_chat(self) -> None:
+    #     chats = self.__get_chats_user_is_in()
+    #     if chats == []:
+    #         self.__chat_list_display.show_message('No chats to remove')
+    #         return
+    #     index = self.__chat_list_display.get_user_chat_index(chats)
+    #     if index == -1:
+    #         return
+    #     chat = self.__chats[index]
+    #     if chat.creator_user != self.__app.get_current_user():
+    #         self.__chat_list_display.show_error('Only the creator can remove the chat')
+    #         return
+    #     del self.__chats[index]
+    #     self.__chat_list_display.show_message('Chat removed')
 
     def open_my_chat(self) -> None:
         chats = self.__get_chats_user_is_in()
