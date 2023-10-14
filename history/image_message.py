@@ -1,6 +1,7 @@
 from .media_message import MediaMessage
 from entities.user import User
 
+
 class ImageMessage(MediaMessage):
     def __init__(self, path: str, user: User):
         if not isinstance(user, User):

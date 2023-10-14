@@ -19,7 +19,7 @@ class User:
     def nickname(self, nickname: str) -> None:
         self.__check_nickname(nickname)
         self.__nickname = nickname
-    
+
     @property
     def password(self) -> str:
         return self.__password
@@ -28,7 +28,7 @@ class User:
     def password(self, password: str) -> None:
         self.__check_password(password)
         self.__password = password
-    
+
     @property
     def id(self) -> UUID:
         return self.__id
@@ -42,13 +42,13 @@ class User:
     #   Avaliates if the username is a valid one
     def __check_nickname(self, nickname: str) -> None:
         if not isinstance(nickname, str):
-            raise TypeError('Nickname must be a string')
+            raise TypeError("Nickname must be a string")
         if len(nickname) < 3:
-            raise ValueError('Nickname must be at least 3 characters long')
+            raise ValueError("Nickname must be at least 3 characters long")
 
     #   Avaliates if the conditions for the password are met
     def __check_password(self, password: str) -> None:
         if not isinstance(password, str):
-            raise TypeError('Password must be a string')
+            raise TypeError("Password must be a string")
         if len(password) < 6:
-            raise ValueError('Password must be at least 6 characters long')
+            raise ValueError("Password must be at least 6 characters long")

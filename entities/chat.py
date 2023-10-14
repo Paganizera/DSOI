@@ -5,6 +5,7 @@ from history.video_message import VideoMessage
 from history.image_message import ImageMessage
 from history.chat_history import ChatHistory
 
+
 class Chat:
     #   Constructor
     def __init__(self, name: str, creator_user: User) -> None:
@@ -20,7 +21,7 @@ class Chat:
     @property
     def name(self) -> str:
         return self.__name
-    
+
     @name.setter
     def name(self, name: str) -> None:
         if not isinstance(name, str):
@@ -30,19 +31,18 @@ class Chat:
     @property
     def creator_user(self) -> User:
         return self.__creator_user
-    
+
     @property
     def id(self) -> UUID:
         return self.__id
-    
+
     @property
     def users(self) -> list[User]:
         return self.__users
-    
+
     @property
     def chat_history(self) -> ChatHistory:
         return self.__chat_history
-    
 
     #   Checks wheter there's duplicated instances
     def __eq__(self, other: object) -> bool:
@@ -72,25 +72,25 @@ class Chat:
         if not isinstance(user, User):
             raise TypeError(f"Expected User, got {type(user)}")
         self.__users.append(user)
-    
+
     #   Remove an user to the chat
     def remove_user(self, user: User) -> None:
         if not isinstance(user, User):
             raise TypeError(f"Expected User, got {type(user)}")
         #   Checks wheter there's the user or not
         if user not in self.__users:
-            raise Exception('User not found')
+            raise Exception("User not found")
         self.__users.remove(user)
 
     #   Private function to avaliate wheter
     #   the chat name is valid or not
     def __check_name(self, name: str):
         if not isinstance(name, str):
-            raise TypeError('Name must be a string')
+            raise TypeError("Name must be a string")
         if len(name) < 3:
-            raise ValueError('Name must be at least 3 characters long')
+            raise ValueError("Name must be at least 3 characters long")
 
     #   Avaliates wheter the current user is valid or not
     def __check_creator_user(self, creator_user: User):
         if not isinstance(creator_user, User):
-            raise TypeError('Creator user must be a User object')
+            raise TypeError("Creator user must be a User object")

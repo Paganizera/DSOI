@@ -13,17 +13,17 @@ class DisplayAbstract(ABC):
         pass
 
     def __clear_screen(self) -> None:
-        call('cls' if system() == 'Windows' else 'clear', shell=True)
+        call("cls" if system() == "Windows" else "clear", shell=True)
 
     def enter_to_continue(self) -> None:
-        input('Press enter to continue...')
+        input("Press enter to continue...")
 
     def show_display_header(self, header: str) -> None:
         self.__clear_screen()
         n = 50
-        print('-' * n)
-        print('{:^{n}}'.format(header, n=n))
-        print('-' * n)
+        print("-" * n)
+        print("{:^{n}}".format(header, n=n))
+        print("-" * n)
 
     def is_valid_input(self, _input: str, _range: range) -> bool:
         # checks the _range type
@@ -38,22 +38,22 @@ class DisplayAbstract(ABC):
             # checks if _input is in _range
             if _input not in _range:
                 return False
-        
+
         # checks if _input is numeric and in _range
-        if not _input.isnumeric() or int(_input) not in _range: 
+        if not _input.isnumeric() or int(_input) not in _range:
             return False
-        
+
         return True
 
     def y_n_question(self, msg: str) -> bool:
         while True:
-            option = input(msg + ' [y/n]: ').lower().strip()
-            if option == '':
+            option = input(msg + " [y/n]: ").lower().strip()
+            if option == "":
                 return False
-            return option[0] == 'y'
-            
+            return option[0] == "y"
+
     def show_message(self, message: str) -> None:
         print(message)
 
     def show_error(self, error: str) -> None:
-        print('ERROR: '+ error)
+        print("ERROR: " + error)

@@ -13,13 +13,13 @@ class App(ControllersAbstract):
         self.__users_controller = UsersController(self)
         self.__chats_controller = ChatsController(self)
         self.__display = MainDisplay(self)
-    
+
     #   Open the main display
     def open_screen(self) -> None:
         options = {
-            '1': self.__users_controller.open_screen,
-            '2': self.__chats_controller.open_screen,
-            '3': self.exit
+            "1": self.__users_controller.open_screen,
+            "2": self.__chats_controller.open_screen,
+            "3": self.exit,
         }
         #   Keep it running for the purpouse of run
         #   More that one function
@@ -37,7 +37,7 @@ class App(ControllersAbstract):
     #   End program
     def exit(self):
         exit(0)
-    
+
     #   The first function to run in this app
     def start(self) -> None:
         self.__users_controller.open_screen()
@@ -47,5 +47,5 @@ class App(ControllersAbstract):
         return self.__users_controller.current_user
 
     #   Returns all users in the system
-    def get_all_users(self)-> list[User]:
+    def get_all_users(self) -> list[User]:
         return self.__users_controller.users

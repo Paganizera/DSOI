@@ -32,14 +32,14 @@ class ChatsController(ControllersAbstract):
     def current_chat(self) -> Chat | None:
         return self.__current_chat
 
-    #   Private function that analyzis wheter 
+    #   Private function that analyzis wheter
     #   A Chat is or not in the chat list
     def __chat_in_list(self, chat: Chat) -> bool:
         for c in self.__chats:
             if c == chat:
                 return True
         return False
-    
+
     #   Private function that get's all chats where
     #   The current user is in
     def __get_chats_user_is_in(self) -> list[Chat]:
@@ -52,19 +52,19 @@ class ChatsController(ControllersAbstract):
     #   Screen manipulation
     def open_screen(self) -> None:
         chat_list_options = {
-            '1': self.add_chat,
-            '2': self.open_my_chat,
-            '3': self.your_chats,
-            '4': self.browse_chats,
-            '5': self.exit
+            "1": self.add_chat,
+            "2": self.open_my_chat,
+            "3": self.your_chats,
+            "4": self.browse_chats,
+            "5": self.exit,
         }
         chat_options = {
-            '1': self.send_text_message,
-            '2': self.send_video_message,
-            '3': self.send_image_message,
-            '4': self.chat_history,
-            '5': self.close_chat,
-            '6': self.remove_user_from_chat,
+            "1": self.send_text_message,
+            "2": self.send_video_message,
+            "3": self.send_image_message,
+            "4": self.chat_history,
+            "5": self.close_chat,
+            "6": self.remove_user_from_chat,
         }
         #   While True makes the code to keep running
         #   For the purpouse of making avaiable to
@@ -85,7 +85,8 @@ class ChatsController(ControllersAbstract):
                 #   Selection pannel for an active chat
                 try:
                     option = self.__chat_messages_display.show_options(
-                        self.__current_chat)
+                        self.__current_chat
+                    )
                 except InvalidOptionError as e:
                     self.__chat_messages_display.show_error(str(e))
                 else:
@@ -108,20 +109,20 @@ class ChatsController(ControllersAbstract):
         #   If there is already a chat that equals the new one
         #   Returns an error
         if self.__chat_in_list(chat):
-            self.__chat_list_display.show_error('Chat already exists')
+            self.__chat_list_display.show_error("Chat already exists")
             return
         #   Auto add the current user to the new chat
         #   And then append it to the chat list
         chat.add_user(self.__app.get_current_user())
         self.__chats.append(chat)
-        self.__chat_list_display.show_message('Chat created')
+        self.__chat_list_display.show_message("Chat created")
 
     #   Setts a current chat by a choosen one
     def open_my_chat(self) -> None:
         chats = self.__get_chats_user_is_in()
         #   Handle the case where there's no chats to open
         if chats == []:
-            self.__chat_list_display.show_message('No chats to open')
+            self.__chat_list_display.show_message("No chats to open")
             return
         #   Handle miss inputs
         try:
@@ -134,21 +135,21 @@ class ChatsController(ControllersAbstract):
         #   Open the selected chat by setting it as the
         #   Current Chat one
         self.__current_chat = chats[index]
-        self.__chat_messages_display.show_message('Chat opened')
+        self.__chat_messages_display.show_message("Chat opened")
 
     # Chats have user, user should have chats
     def your_chats(self) -> None:
         chats = self.__get_chats_user_is_in()
         if chats == []:
             #   Returns no chat if the list is empty
-            self.__chat_list_display.show_message('No chats to show')
+            self.__chat_list_display.show_message("No chats to show")
             return
         #   Return all chats when the list is not empty
         self.__chat_list_display.show_user_chats(chats)
 
     def browse_chats(self) -> None:
         if self.__chats == []:
-            self.__chat_list_display.show_message('No chats to show')
+            self.__chat_list_display.show_message("No chats to show")
             return
         try:
             index = self.__chat_list_display.get_chat_index(self.__chats)
@@ -159,11 +160,10 @@ class ChatsController(ControllersAbstract):
             return
         chat = self.__chats[index]
         if chat.user_in_chat(self.__app.get_current_user()):
-            self.__chat_list_display.show_message(
-                'You are already in this chat')
+            self.__chat_list_display.show_message("You are already in this chat")
             return
         chat.add_user(self.__app.get_current_user())
-        self.__chat_list_display.show_message('Chat joined')
+        self.__chat_list_display.show_message("Chat joined")
 
     #   We need to validate path, because as we aren't dealing
     #   With GUI yet, we can't properly show images on terminal
@@ -177,7 +177,7 @@ class ChatsController(ControllersAbstract):
         if not isinstance(user, User):
             raise TypeError(f"Expected User, got {type(user)}")
         if not self.__current_chat.user_in_chat(user):
-            raise Exception('User not found')
+            raise Exception("User not found")
         content = self.__chat_messages_display.get_input_text()
         message = TextMessage(content, user)
         self.__current_chat.chat_history.add_message(message)
@@ -190,13 +190,13 @@ class ChatsController(ControllersAbstract):
         if not isinstance(user, User):
             raise TypeError(f"Expected User, got {type(user)}")
         if not self.__current_chat.user_in_chat(user):
-            raise Exception('User not found')
+            raise Exception("User not found")
         #   Here we precreate the media's path for making it
         #   Easier to the user for just texting the file's name
-        path = './media/video/'
+        path = "./media/video/"
         path += self.__chat_messages_display.get_inputfile_name()
         #   We validate the path, if it's not valid we raise
-        #   A custom Exception    
+        #   A custom Exception
         if not self.validate_path(path):
             self.__chat_messages_display.show_message("No file found")
         else:
@@ -212,8 +212,8 @@ class ChatsController(ControllersAbstract):
         if not isinstance(user, User):
             raise TypeError(f"Expected User, got {type(user)}")
         if not self.__current_chat.user_in_chat(user):
-            raise Exception('User not found')
-        path = './media/image/'
+            raise Exception("User not found")
+        path = "./media/image/"
         path += self.__chat_messages_display.get_inputfile_name()
         if not self.validate_path(path):
             self.__chat_messages_display.show_message("No file found")
@@ -222,10 +222,10 @@ class ChatsController(ControllersAbstract):
             #   And add it to the Chat's history
             message = ImageMessage(path, user)
             self.__current_chat.chat_history.add_message(message)
-    
+
     #   This function is responsable for updating the messages's
     #   When an user isn't found anymore
-    def update_chat(self)-> None:
+    def update_chat(self) -> None:
         users = self.__app.get_all_users()
         #   We get all messages from the ChatHistory related class
         chat_messages = self.__current_chat.chat_history.messages
@@ -243,12 +243,11 @@ class ChatsController(ControllersAbstract):
             #   User None
             if flag == False:
                 message.user = None
-        #   Finally we make the current messages from the 
+        #   Finally we make the current messages from the
         #   ChatHistory class the updated ones
         self.__current_chat.chat_history.messages = chat_messages
-            
 
-    #   This function is responsable for displaying 
+    #   This function is responsable for displaying
     #   All the messages from a chat
     def chat_history(self) -> None:
         #   Firstly we must update the message list
@@ -260,7 +259,7 @@ class ChatsController(ControllersAbstract):
     #   Closing the current chat by setting it to None
     def close_chat(self) -> None:
         self.__current_chat = None
-        self.__chat_list_display.show_message('Chat closed')
+        self.__chat_list_display.show_message("Chat closed")
 
     #   Removes a user from a chat by evaluating wheter it is
     #   The creator user, an abitrary user os the last in the
@@ -271,21 +270,23 @@ class ChatsController(ControllersAbstract):
         #   Removing not creator user from chat
         if chat.creator_user != curr_user:
             chat.remove_user(curr_user)
-            self.__chat_messages_display.show_message('User removed from chat')
+            self.__chat_messages_display.show_message("User removed from chat")
         #   When there is no user on a chat, it's removed from
         #   The chat list
         elif len(chat.users) == 1:
-            if self.__chat_messages_display.y_n_question('You are the only user in this chat.\
-                                                         Do you want to remove it?'):
+            if self.__chat_messages_display.y_n_question(
+                "You are the only user in this chat.\
+                                                         Do you want to remove it?"
+            ):
                 self.__chats.remove(chat)
-                self.__chat_messages_display.show_message('Chat removed')
+                self.__chat_messages_display.show_message("Chat removed")
             else:
-                self.__chat_messages_display.show_message('Chat not removed')
+                self.__chat_messages_display.show_message("Chat not removed")
                 return
-        #   When you're a creator user you must change the current 
+        #   When you're a creator user you must change the current
         #   "ADM" user, then you might exit chat
         else:
             chat.change_creator_user()
             chat.remove_user(curr_user)
-            self.__chat_messages_display.show_message('User removed from chat')
+            self.__chat_messages_display.show_message("User removed from chat")
         self.__current_chat = None
