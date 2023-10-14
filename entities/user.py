@@ -2,6 +2,7 @@ from uuid import UUID, uuid4
 
 
 class User:
+    #   Constructor
     def __init__(self, nickname: str, password: str) -> None:
         self.__check_nickname(nickname)
         self.__check_password(password)
@@ -9,6 +10,7 @@ class User:
         self.__password = hash(password)
         self.__id = uuid4()
 
+    #   Getters and Setters
     @property
     def nickname(self) -> str:
         return self.__nickname
@@ -31,17 +33,20 @@ class User:
     def id(self) -> UUID:
         return self.__id
 
+    #   Avaliates duplicated users
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, User):
             return False
         return self.__id == other.id or self.__nickname == other.nickname
 
+    #   Avaliates if the username is a valid one
     def __check_nickname(self, nickname: str) -> None:
         if not isinstance(nickname, str):
             raise TypeError('Nickname must be a string')
         if len(nickname) < 3:
             raise ValueError('Nickname must be at least 3 characters long')
 
+    #   Avaliates if the conditions for the password are met
     def __check_password(self, password: str) -> None:
         if not isinstance(password, str):
             raise TypeError('Password must be a string')

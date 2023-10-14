@@ -16,7 +16,8 @@ class ChatMessagesDisplay(DisplayAbstract):
 
     def show_display_header(self, chat: Chat) -> None:
         return super().show_display_header(f'Chat: {chat.name} ({len(chat.users)} users) [id: {chat.id}]')
-
+    
+    #Option pannel
     def show_options(self, chat: Chat) -> str:
         self.show_display_header(chat)
         print('\t1 - Send text message')
@@ -26,13 +27,17 @@ class ChatMessagesDisplay(DisplayAbstract):
         print('\t5 - Close chat')
         print('\t6 - Exit chat')
         option = input('Option: ').strip()
-
+        #   Validate input
         if not self.is_valid_input(option, range(1, 6)):
             raise InvalidOptionError()
         return option
 
+    #   Shows all messages from the current chat's ChatHistory
     def show_messages(self, chat: Chat) -> None:
         messages = chat.chat_history.messages
+        #   Different prints wheter the user who sent
+        #   Still has an account or has no more
+        #   And also analyzes the messagetype
         for message in messages:
             #   Text message print
             if isinstance(message, TextMessage):
@@ -47,14 +52,18 @@ class ChatMessagesDisplay(DisplayAbstract):
                 else:
                     print(f"{message.user.nickname}: {message.path} at {message.timestamp.hour}:{message.timestamp.minute}")
 
+    #   Used for custom messages to appear as system 
+    #   alerts/statuses
     def show_message(self, message:str) -> None:
         print(message) 
 
+    #   Get the text content to send
     def get_input_text(self) -> str:
         print("Insert the message to send")
         message = input().strip()
         return message
-
+    
+    # Get the media's name that the user wants to send
     def get_inputfile_name(self)-> str:
         print("\tInsert the name of the file to send")
         print("\tThe extension of the file is needed")
