@@ -6,4 +6,3 @@ class ImageMessage(MediaMessage):
         if not isinstance(user, User):
             raise TypeError(f"Expected User, got {type(user)}")
         super().__init__(path, user)
-    

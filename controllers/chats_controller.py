@@ -160,7 +160,7 @@ class ChatsController(ControllersAbstract):
     def send_text_message(self, user: User) -> None:
         if not isinstance(user, User):
             raise TypeError(f"Expected User, got {type(user)}")
-        if user not in self.__current_chat.__users:
+        if not self.__current_chat.user_in_chat(user):
             raise Exception('User not found')
         content = self.__chat_messages_display.get_input_text()
         message = TextMessage(content, user)
@@ -172,7 +172,7 @@ class ChatsController(ControllersAbstract):
     def send_video_message(self, user:User)->None:
         if not isinstance(user, User):
             raise TypeError(f"Expected User, got {type(user)}")
-        if user not in self.__current_chat.__users:
+        if not self.__current_chat.user_in_chat(user):
             raise Exception('User not found')
         #   Here we precreate the media's path for making it
         #   Easier to the user for just texting the file's name
