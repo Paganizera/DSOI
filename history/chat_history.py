@@ -4,8 +4,16 @@ from base_message import BaseMessage
 class ChatHistory:
     def __init__(self):
         self.__messages: list[BaseMessage] = []
-        self.__buffer: list[BaseMessage] = []
+        # self.__buffer: list[BaseMessage] = []
 
+    def get_messages(self) -> list[BaseMessage]:
+        return self.__messages
+
+    def add_message(self, message: BaseMessage):
+        self.__messages.append(message)
+
+
+    '''
     def add_message_to_buffer(self, message: BaseMessage) -> None:
         if not isinstance(message, BaseMessage):
             raise TypeError(f"Expected BaseMessage, got {type(message)}")
@@ -15,6 +23,4 @@ class ChatHistory:
         tmp = self.__buffer[:]
         self.__buffer = []
         return tmp
-
-    def get_messages(self) -> list[BaseMessage]:
-        return self.__messages
+    '''

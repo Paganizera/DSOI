@@ -1,9 +1,12 @@
 from .controllers_abstract import ControllersAbstract
 from entities.chat import Chat
+from entities.user import User
 from displays.chat_list_display import ChatListDisplay
 from displays.chat_messages_display import ChatMessagesDisplay
 from errors.custom_errors import InvalidOptionError
-
+from history.text_message import TextMessage
+from history.video_message import VideoMessage
+from history.image_message import ImageMessage
 
 class ChatsController(ControllersAbstract):
     def __init__(self, app: ControllersAbstract) -> None:
@@ -13,16 +16,16 @@ class ChatsController(ControllersAbstract):
         self.__current_chat: Chat | None = None
         self.__chat_list_display = ChatListDisplay(self)
         self.__chat_messages_display = ChatMessagesDisplay(self)
-        self.__app = app 
+        self.__app = app
 
     @property
     def chats(self) -> list[Chat]:
         return self.__chats
-    
+
     @property
     def current_chat(self) -> Chat | None:
         return self.__current_chat
-    
+
     def __chat_in_list(self, chat: Chat) -> bool:
         for c in self.__chats:
             if c == chat:
@@ -39,7 +42,7 @@ class ChatsController(ControllersAbstract):
     def open_screen(self) -> None:
         chat_list_options = {
             '1': self.add_chat,
-            #'2': self.remove_chat,
+            # '2': self.remove_chat,
             '2': self.open_my_chat,
             '3': self.your_chats,
             '4': self.browse_chats,
@@ -47,9 +50,10 @@ class ChatsController(ControllersAbstract):
         }
         chat_options = {
             '1': self.send_message,
-            '2': self.chat_history,
-            '3': self.close_chat,
-            '4': self.remove_user_from_chat,
+            '2': self.send_media_message,
+            '3': self.chat_history,
+            '4': self.close_chat,
+            '5': self.remove_user_from_chat,
         }
         while True:
             if self.__current_chat is None:
@@ -61,7 +65,8 @@ class ChatsController(ControllersAbstract):
                     chat_list_options[option]()
             else:
                 try:
-                    option = self.__chat_messages_display.show_options(self.__current_chat)
+                    option = self.__chat_messages_display.show_options(
+                        self.__current_chat)
                 except InvalidOptionError as e:
                     self.__chat_messages_display.show_error(str(e))
                 else:
@@ -69,7 +74,7 @@ class ChatsController(ControllersAbstract):
             self.__chat_list_display.enter_to_continue()
 
     def exit(self) -> None:
-       self.__app.open_screen()
+        self.__app.open_screen()
 
     def add_chat(self) -> None:
         name = self.__chat_list_display.get_new_chat_name()
@@ -137,14 +142,54 @@ class ChatsController(ControllersAbstract):
             return
         chat = self.__chats[index]
         if chat.user_in_chat(self.__app.get_current_user()):
-            self.__chat_list_display.show_message('You are already in this chat')
+            self.__chat_list_display.show_message(
+                'You are already in this chat')
             return
         chat.add_user(self.__app.get_current_user())
         self.__chat_list_display.show_message('Chat joined')
 
-    def send_message(self) -> None:
-        pass
+    # WE NEED TO VALIDATE MESSAGE FILES, BECAUSE AS WE CAN SEND TXT
+    # AND ALSO MEDIA FILES, WE MUST' VALIDATE THEIR INTEGRITY
+
+        # idk if this is the best way to do this
+    def send_text_message(self, user: User) -> None:
+        if not isinstance(user, User):
+            raise TypeError(f"Expected User, got {type(user)}")
+        if user not in self.__current_chat.__users:
+            raise Exception('User not found')
+        content = self.__chat_messages_display.get_input_text()
+        message = TextMessage(content, user)
+        self.current_chat.__chat_history.add_message(message)
     
+    def send_video_message(self, user:User)->None:
+        if not isinstance(user, User):
+            raise TypeError(f"Expected User, got {type(user)}")
+        if user not in self.__current_chat.__users:
+            raise Exception('User not found')
+        path = self.__chat_messages_display.get_input_path()
+        if self.__validate_path(path):
+            pass
+        #print(self.__create_message_prefix(user) + message)
+    '''    
+    def send_image_message(self, user: User) -> None:
+        if not isinstance(user, User):
+            raise TypeError(f"Expected User, got {type(user)}")
+        if user not in self.__users:
+            raise Exception('User not found')
+        path = ...
+        message = ImageMessage(path)
+        #print(self.__create_message_prefix(user) + message)
+    
+    def send_video_message(self, user: User) -> None:
+        if not isinstance(user, User):
+            raise TypeError(f"Expected User, got {type(user)}")
+        if user not in self.__users:
+            raise Exception('User not found')
+        path = ...
+        message = VideoMessage(path)
+        #print(self.__create_message_prefix(user) + message)
+    '''
+
     def chat_history(self) -> None:
         pass
 

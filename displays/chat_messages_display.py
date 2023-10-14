@@ -7,27 +7,31 @@ from errors.custom_errors import InvalidOptionError
 class ChatMessagesDisplay(DisplayAbstract):
     def __init__(self, controller: ControllersAbstract) -> None:
         if not isinstance(controller, ControllersAbstract):
-            raise TypeError(f"Expected ControllersAbstract, got {type(controller)}")
-        
+            raise TypeError(
+                f"Expected ControllersAbstract, got {type(controller)}")
+
         super().__init__(controller)
-    
+
     def show_display_header(self, chat: Chat) -> None:
         return super().show_display_header(f'Chat: {chat.name} ({len(chat.users)} users) [id: {chat.id}]')
 
     def show_options(self, chat: Chat) -> str:
         self.show_display_header(chat)
-        print('\t1 - Send message')
-        print('\t2 - Chat history')
-        print('\t3 - Close chat')
-        print('\t4 - Exit chat')
+        print('\t1 - Send text message')
+        print('\t2 - Send media message')
+        print('\t3 - Chat history')
+        print('\t4 - Close chat')
+        print('\t5 - Exit chat')
         option = input('Option: ').strip()
 
         if not self.is_valid_input(option, range(1, 5)):
             raise InvalidOptionError()
         return option
 
-    def show_messages(chat: Chat) -> None:
+    def show_messages(self, chat: Chat) -> None:
         pass
 
-    def get_input() -> str:
-        pass
+    def get_input_text(self) -> str:
+        print("Insert the message to send")
+        message = input().strip()
+        return message

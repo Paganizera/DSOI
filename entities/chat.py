@@ -3,7 +3,7 @@ from .user import User
 from history.text_message import TextMessage
 from history.video_message import VideoMessage
 from history.image_message import ImageMessage
-
+from history.chat_history import ChatHistory
 
 class Chat:
     def __init__(self, name: str, creator_user: User) -> None:
@@ -13,7 +13,7 @@ class Chat:
         self.__creator_user: User = creator_user
         self.__id: UUID = uuid4()
         self.__users: list[User] = []
-
+        self.__chat_history = ChatHistory()
     @property
     def name(self) -> str:
         return self.__name
@@ -66,40 +66,6 @@ class Chat:
         if user not in self.__users:
             raise Exception('User not found')
         self.__users.remove(user)
-
-    # Maybe this should be in a message display
-    def __create_message_prefix(self, user: User) -> str:
-        if not isinstance(user, User):
-            raise TypeError(f"Expected User, got {type(user)}")
-        return f"{user.nickname}: "
-    
-    # idk if this is the best way to do this
-    def send_text_message(self, user: User) -> None:
-        if not isinstance(user, User):
-            raise TypeError(f"Expected User, got {type(user)}")
-        if user not in self.__users:
-            raise Exception('User not found')
-        content = ... # get message from display
-        message = TextMessage(content)
-        #print(self.__create_message_prefix(user) + message)
-    
-    def send_image_message(self, user: User) -> None:
-        if not isinstance(user, User):
-            raise TypeError(f"Expected User, got {type(user)}")
-        if user not in self.__users:
-            raise Exception('User not found')
-        path = ...
-        message = ImageMessage(path)
-        #print(self.__create_message_prefix(user) + message)
-    
-    def send_video_message(self, user: User) -> None:
-        if not isinstance(user, User):
-            raise TypeError(f"Expected User, got {type(user)}")
-        if user not in self.__users:
-            raise Exception('User not found')
-        path = ...
-        message = VideoMessage(path)
-        #print(self.__create_message_prefix(user) + message)
 
     def __check_name(self, name: str):
         if not isinstance(name, str):

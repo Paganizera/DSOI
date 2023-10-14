@@ -1,6 +1,9 @@
 from .media_message import MediaMessage
-
+from entities.user import User
 
 class ImageMessage(MediaMessage):
-    def __init__(self, path: str):
-        super().__init__(path)
+    def __init__(self, path: str, user: User):
+        if not isinstance(user, User):
+            raise TypeError(f"Expected User, got {type(user)}")
+        super().__init__(path, user)
+    
