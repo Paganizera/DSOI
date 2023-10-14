@@ -236,7 +236,7 @@ class ChatsController(ControllersAbstract):
             if message.user == None:
                 pass
             for user in users:
-                if user.nickname == message.user.nickname:
+                if user == message.user:
                     flag = True
                     pass
             #   If the user isn't here, we make the message's

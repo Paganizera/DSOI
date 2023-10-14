@@ -27,7 +27,7 @@ class User:
     @password.setter
     def password(self, password: str) -> None:
         self.__check_password(password)
-        self.__password = password
+        self.__password = hash(password)
 
     @property
     def id(self) -> UUID:
