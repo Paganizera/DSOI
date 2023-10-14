@@ -32,20 +32,20 @@ class ChatMessagesDisplay(DisplayAbstract):
         return option
 
     def show_messages(self, chat: Chat) -> None:
-        messages = chat.chat_history.get_messages()
+        messages = chat.chat_history.messages
         for message in messages:
             #   Text message print
             if isinstance(message, TextMessage):
                 if message.user == None:
-                    print(f'Deleted User: {message.text} at {message.timestamp.hour}:{message.timestamp.minute}')
+                    print(f"Deleted User: {message.text} at {message.timestamp.hour}:{message.timestamp.minute}")
                 else:
-                    print(f'\033[91m{message.user.nickname}\033[00m: {message.text} at {message.timestamp.hour}:{message.timestamp.minute}')
+                    print(f"{message.user.nickname}: {message.text} at {message.timestamp.hour}:{message.timestamp.minute}")
             #   Video message print
             if isinstance(message, VideoMessage) or isinstance (message, ImageMessage):
                 if message.user == None:
-                    print(f'Deleted User: {message.path} at {message.timestamp.hour}:{message.timestamp.minute}')
+                    print(f"Deleted User: {message.path} at {message.timestamp.hour}:{message.timestamp.minute}")
                 else:
-                    print(f'{message.user.nickname}: {message.path} at {message.timestamp.hour}:{message.timestamp.minute}')
+                    print(f"{message.user.nickname}: {message.path} at {message.timestamp.hour}:{message.timestamp.minute}")
 
     def show_message(self, message:str) -> None:
         print(message) 

@@ -46,7 +46,6 @@ class UsersDisplay(DisplayAbstract):
     def get_current_password(self) -> str:
         return getpass('Current password: ')
 
-    def show_user_data(self, nickname: str, password: str, id: UUID) -> None:
+    def show_user_data(self, nickname: str, id: UUID) -> None:
         print(f'\tNickname: \'{nickname}\'')
-        print(f'\tPassword: \'{password}\'')
         print(f'\tId      : \'{id}\'')

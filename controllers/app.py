@@ -35,3 +35,6 @@ class App(ControllersAbstract):
 
     def get_current_user(self) -> User | None:
         return self.__users_controller.current_user
+
+    def get_all_users(self)-> list[User]:
+        return self.__users_controller.users

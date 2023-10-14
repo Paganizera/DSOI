@@ -92,22 +92,6 @@ class ChatsController(ControllersAbstract):
         self.__chats.append(chat)
         self.__chat_list_display.show_message('Chat created')
 
-    # removes chat from list, not from users
-    # def remove_chat(self) -> None:
-    #     chats = self.__get_chats_user_is_in()
-    #     if chats == []:
-    #         self.__chat_list_display.show_message('No chats to remove')
-    #         return
-    #     index = self.__chat_list_display.get_user_chat_index(chats)
-    #     if index == -1:
-    #         return
-    #     chat = self.__chats[index]
-    #     if chat.creator_user != self.__app.get_current_user():
-    #         self.__chat_list_display.show_error('Only the creator can remove the chat')
-    #         return
-    #     del self.__chats[index]
-    #     self.__chat_list_display.show_message('Chat removed')
-
     def open_my_chat(self) -> None:
         chats = self.__get_chats_user_is_in()
         if chats == []:
@@ -208,7 +192,22 @@ class ChatsController(ControllersAbstract):
             message = ImageMessage(path, user)
             self.__current_chat.chat_history.add_message(message)
 
+    def update_chat(self)-> None:
+        users = self.__app.get_all_users()
+        chat_messages = self.__current_chat.chat_history.messages
+        for message in chat_messages:
+            flag = False
+            for user in users:
+                if user.nickname == message.user.nickname:
+                    flag = True
+                    pass
+            if flag == False:
+                message.user = None
+        self.__current_chat.chat_history.messages = chat_messages
+            
+
     def chat_history(self) -> None:
+        self.update_chat()
         chat = self.current_chat
         self.__chat_messages_display.show_messages(chat)
 
