@@ -12,7 +12,7 @@ class ChatListDisplay(DisplayAbstract):
         
     def __show_chats(self, chats: list[Chat]):
         for n, chat in enumerate(chats):
-            print(f'\t{n+1} - {chat.name} ({len(chat.users)} users) [id: {chat.id}]')
+            print(f'\t{n+1} - {chat.name} ({len(chat.users)} users)')
 
     def show_display_header(self) -> None:
         return super().show_display_header('Chat List Menu')
@@ -20,7 +20,6 @@ class ChatListDisplay(DisplayAbstract):
     def show_options(self) -> str:
         self.show_display_header()
         print('\t1 - Add chat')
-        #print('\t2 - Remove chat')
         print('\t2 - Open chat')
         print('\t3 - Your chats')
         print('\t4 - Browse chats')
@@ -33,9 +32,9 @@ class ChatListDisplay(DisplayAbstract):
 
     def get_chat_index(self, chats: list[Chat]) -> int:
         while True:
-            print('Chats:')
+            print('Chats:\n')
             self.__show_chats(chats)
-            index = input('Index of chat to join [0 to cancel]: ').strip()
+            index = input('\nSelect the chat you want to join (0 to cancel): ').strip()
 
             if index == '0':
                 return -1
@@ -48,7 +47,7 @@ class ChatListDisplay(DisplayAbstract):
     def get_user_chat_index(self, chats: list[Chat]) -> int:
         while True:
             self.show_user_chats(chats)
-            index = input('Index of chat [0 to cancel]: ').strip()
+            index = input('\nSelect the chat you want to open (0 to cancel): ').strip()
             if index == '0':
                 return -1
             if not self.is_valid_input(index, range(1, len(chats)+1)):
