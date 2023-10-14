@@ -51,11 +51,12 @@ class ChatsController(ControllersAbstract):
             '5': self.exit
         }
         chat_options = {
-            '1': self.send_message,
-            '2': self.send_media_message,
-            '3': self.chat_history,
-            '4': self.close_chat,
-            '5': self.remove_user_from_chat,
+            '1': self.send_text_message,
+            '2': self.send_video_message,
+            '3': self.send_image_message,
+            '4': self.chat_history,
+            '5': self.close_chat,
+            '6': self.remove_user_from_chat,
         }
         while True:
             if self.__current_chat is None:
@@ -157,19 +158,21 @@ class ChatsController(ControllersAbstract):
     
     #   We get a message and then add it to the current
     #   Chat's history
-    def send_text_message(self, user: User) -> None:
+    def send_text_message(self) -> None:
+        user = self.__app.get_current_user()
         if not isinstance(user, User):
             raise TypeError(f"Expected User, got {type(user)}")
         if not self.__current_chat.user_in_chat(user):
             raise Exception('User not found')
         content = self.__chat_messages_display.get_input_text()
         message = TextMessage(content, user)
-        self.current_chat.__chat_history.add_message(message)
+        self.__current_chat.chat_history.add_message(message)
     
     #   Instead of getting a txt message, we must get 
     #   A file's path so we can use it later when
     #   GUI is meant
-    def send_video_message(self, user:User)->None:
+    def send_video_message(self)->None:
+        user = self.__app.get_current_user()
         if not isinstance(user, User):
             raise TypeError(f"Expected User, got {type(user)}")
         if not self.__current_chat.user_in_chat(user):
@@ -185,11 +188,12 @@ class ChatsController(ControllersAbstract):
         #   If the message is valid, we create a new VideoMessage
         #   And add it to the Chat's history
         message = VideoMessage(path, user)
-        self.__current_chat.__chat_history.add_message(message)
+        self.__current_chat.chat_history.add_message(message)
 
     #   This function is almost the same as send_video_message
     #   But we change the precreated path to the images folder
-    def send_image_message(self, user:User)->None:
+    def send_image_message(self)->None:
+        user = self.__app.get_current_user()
         if not isinstance(user, User):
             raise TypeError(f"Expected User, got {type(user)}")
         if user not in self.__current_chat.__users:
@@ -199,10 +203,11 @@ class ChatsController(ControllersAbstract):
         if not self.validate_path(path):
             raise InvalidMessagePathError()
         message = VideoMessage(path, user)
-        self.__current_chat.__chat_history.add_message(message) 
+        self.__current_chat.chat_history.add_message(message) 
 
     def chat_history(self) -> None:
-        pass
+        chat = self.current_chat
+        self.__chat_messages_display.show_messages(chat)
 
     def close_chat(self) -> None:
         self.__current_chat = None

@@ -36,6 +36,10 @@ class Chat:
     def users(self) -> list[User]:
         return self.__users
     
+    @property
+    def chat_history(self) -> ChatHistory:
+        return self.__chat_history
+    
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, Chat):
             return False
