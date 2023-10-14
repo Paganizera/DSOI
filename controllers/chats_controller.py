@@ -1,9 +1,11 @@
+import os.path
 from .controllers_abstract import ControllersAbstract
 from entities.chat import Chat
 from entities.user import User
 from displays.chat_list_display import ChatListDisplay
 from displays.chat_messages_display import ChatMessagesDisplay
 from errors.custom_errors import InvalidOptionError
+from errors.custom_errors import InvalidMessagePathError
 from history.text_message import TextMessage
 from history.video_message import VideoMessage
 from history.image_message import ImageMessage
@@ -148,10 +150,13 @@ class ChatsController(ControllersAbstract):
         chat.add_user(self.__app.get_current_user())
         self.__chat_list_display.show_message('Chat joined')
 
-    # WE NEED TO VALIDATE MESSAGE FILES, BECAUSE AS WE CAN SEND TXT
-    # AND ALSO MEDIA FILES, WE MUST' VALIDATE THEIR INTEGRITY
-
-        # idk if this is the best way to do this
+    #   We need to validate path, because as we aren't dealing
+    #   With GUI yet, we can't properly show images on terminal
+    def validate_path(self, path: str) -> bool:
+        return os.path.isfile(path)
+    
+    #   We get a message and then add it to the current
+    #   Chat's history
     def send_text_message(self, user: User) -> None:
         if not isinstance(user, User):
             raise TypeError(f"Expected User, got {type(user)}")
@@ -161,34 +166,40 @@ class ChatsController(ControllersAbstract):
         message = TextMessage(content, user)
         self.current_chat.__chat_history.add_message(message)
     
+    #   Instead of getting a txt message, we must get 
+    #   A file's path so we can use it later when
+    #   GUI is meant
     def send_video_message(self, user:User)->None:
         if not isinstance(user, User):
             raise TypeError(f"Expected User, got {type(user)}")
         if user not in self.__current_chat.__users:
             raise Exception('User not found')
-        path = self.__chat_messages_display.get_input_path()
-        if self.__validate_path(path):
-            pass
-        #print(self.__create_message_prefix(user) + message)
-    '''    
-    def send_image_message(self, user: User) -> None:
+        #   Here we precreate the media's path for making it
+        #   Easier to the user for just texting the file's name
+        path = './media/video/'
+        path += self.__chat_messages_display.get_inputfile_name()
+        #   We validate the path, if it's not valid we raise
+        #   A custom Exception
+        if not self.validate_path(path):
+            raise InvalidMessagePathError()
+        #   If the message is valid, we create a new VideoMessage
+        #   And add it to the Chat's history
+        message = VideoMessage(path, user)
+        self.__current_chat.__chat_history.add_message(message)
+
+    #   This function is almost the same as send_video_message
+    #   But we change the precreated path to the images folder
+    def send_image_message(self, user:User)->None:
         if not isinstance(user, User):
             raise TypeError(f"Expected User, got {type(user)}")
-        if user not in self.__users:
+        if user not in self.__current_chat.__users:
             raise Exception('User not found')
-        path = ...
-        message = ImageMessage(path)
-        #print(self.__create_message_prefix(user) + message)
-    
-    def send_video_message(self, user: User) -> None:
-        if not isinstance(user, User):
-            raise TypeError(f"Expected User, got {type(user)}")
-        if user not in self.__users:
-            raise Exception('User not found')
-        path = ...
-        message = VideoMessage(path)
-        #print(self.__create_message_prefix(user) + message)
-    '''
+        path = './media/image/'
+        path += self.__chat_messages_display.get_inputfile_name()
+        if not self.validate_path(path):
+            raise InvalidMessagePathError()
+        message = VideoMessage(path, user)
+        self.__current_chat.__chat_history.add_message(message) 
 
     def chat_history(self) -> None:
         pass

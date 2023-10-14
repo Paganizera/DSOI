@@ -35,3 +35,10 @@ class ChatMessagesDisplay(DisplayAbstract):
         print("Insert the message to send")
         message = input().strip()
         return message
+
+    def get_inputfile_name(self)-> str:
+        print("Insert the name of the file to send")
+        print("The extension of the file is needed")
+        print("Such as example.png")
+        media_name = input().strip()
+        return media_name
