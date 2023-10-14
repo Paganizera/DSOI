@@ -196,7 +196,7 @@ class ChatsController(ControllersAbstract):
         user = self.__app.get_current_user()
         if not isinstance(user, User):
             raise TypeError(f"Expected User, got {type(user)}")
-        if user not in self.__current_chat.__users:
+        if not self.__current_chat.user_in_chat(user):
             raise Exception('User not found')
         path = './media/image/'
         path += self.__chat_messages_display.get_inputfile_name()

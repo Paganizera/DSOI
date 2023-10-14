@@ -120,6 +120,8 @@ class UsersController(ControllersAbstract):
             self.__display.show_error('Invalid password')
             return
         self.__users.remove(self.__current_user)
+        print(self.__current_user)
+        del self.__current_user
         self.__current_user = None
         self.__display.show_message('User removed successfully')
     
