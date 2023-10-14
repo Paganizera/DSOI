@@ -5,10 +5,10 @@ from entities.user import User
 from displays.chat_list_display import ChatListDisplay
 from displays.chat_messages_display import ChatMessagesDisplay
 from errors.custom_errors import InvalidOptionError
-from errors.custom_errors import InvalidMessagePathError
 from history.text_message import TextMessage
 from history.video_message import VideoMessage
 from history.image_message import ImageMessage
+
 
 class ChatsController(ControllersAbstract):
     def __init__(self, app: ControllersAbstract) -> None:
@@ -44,7 +44,6 @@ class ChatsController(ControllersAbstract):
     def open_screen(self) -> None:
         chat_list_options = {
             '1': self.add_chat,
-            # '2': self.remove_chat,
             '2': self.open_my_chat,
             '3': self.your_chats,
             '4': self.browse_chats,
@@ -155,7 +154,7 @@ class ChatsController(ControllersAbstract):
     #   With GUI yet, we can't properly show images on terminal
     def validate_path(self, path: str) -> bool:
         return os.path.isfile(path)
-    
+
     #   We get a message and then add it to the current
     #   Chat's history
     def send_text_message(self) -> None:
@@ -167,11 +166,11 @@ class ChatsController(ControllersAbstract):
         content = self.__chat_messages_display.get_input_text()
         message = TextMessage(content, user)
         self.__current_chat.chat_history.add_message(message)
-    
-    #   Instead of getting a txt message, we must get 
+
+    #   Instead of getting a txt message, we must get
     #   A file's path so we can use it later when
     #   GUI is meant
-    def send_video_message(self)->None:
+    def send_video_message(self) -> None:
         user = self.__app.get_current_user()
         if not isinstance(user, User):
             raise TypeError(f"Expected User, got {type(user)}")
@@ -182,17 +181,18 @@ class ChatsController(ControllersAbstract):
         path = './media/video/'
         path += self.__chat_messages_display.get_inputfile_name()
         #   We validate the path, if it's not valid we raise
-        #   A custom Exception
+        #   A custom Exception    
         if not self.validate_path(path):
-            raise InvalidMessagePathError()
-        #   If the message is valid, we create a new VideoMessage
-        #   And add it to the Chat's history
-        message = VideoMessage(path, user)
-        self.__current_chat.chat_history.add_message(message)
+            self.__chat_messages_display.show_message("No file found")
+        else:
+            #   If the message is valid, we create a new VideoMessage
+            #   And add it to the Chat's history
+            message = VideoMessage(path, user)
+            self.__current_chat.chat_history.add_message(message)
 
     #   This function is almost the same as send_video_message
     #   But we change the precreated path to the images folder
-    def send_image_message(self)->None:
+    def send_image_message(self) -> None:
         user = self.__app.get_current_user()
         if not isinstance(user, User):
             raise TypeError(f"Expected User, got {type(user)}")
@@ -201,9 +201,12 @@ class ChatsController(ControllersAbstract):
         path = './media/image/'
         path += self.__chat_messages_display.get_inputfile_name()
         if not self.validate_path(path):
-            raise InvalidMessagePathError()
-        message = VideoMessage(path, user)
-        self.__current_chat.chat_history.add_message(message) 
+            self.__chat_messages_display.show_message("No file found")
+        else:
+            #   If the message is valid, we create a new VideoMessage
+            #   And add it to the Chat's history
+            message = ImageMessage(path, user)
+            self.__current_chat.chat_history.add_message(message)
 
     def chat_history(self) -> None:
         chat = self.current_chat
@@ -220,7 +223,8 @@ class ChatsController(ControllersAbstract):
             chat.remove_user(curr_user)
             self.__chat_messages_display.show_message('User removed from chat')
         elif len(chat.users) == 1:
-            if self.__chat_messages_display.y_n_question('You are the only user in this chat. Do you want to remove it?'):
+            if self.__chat_messages_display.y_n_question('You are the only user in this chat.\
+                                                         Do you want to remove it?'):
                 self.__chats.remove(chat)
                 self.__chat_messages_display.show_message('Chat removed')
             else:

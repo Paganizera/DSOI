@@ -37,15 +37,18 @@ class ChatMessagesDisplay(DisplayAbstract):
             #   Text message print
             if isinstance(message, TextMessage):
                 if message.user == None:
-                    print(f'Deleted User: {message.text}\n {message.timestamp}')
+                    print(f'Deleted User: {message.text} at {message.timestamp.hour}:{message.timestamp.minute}')
                 else:
-                    print(f'{message.user.nickname}: {message.text}\n {message.timestamp}')
+                    print(f'\033[91m{message.user.nickname}\033[00m: {message.text} at {message.timestamp.hour}:{message.timestamp.minute}')
             #   Video message print
             if isinstance(message, VideoMessage) or isinstance (message, ImageMessage):
                 if message.user == None:
-                    print(f'Deleted User: {message.path}\n {message.timestamp}')
+                    print(f'Deleted User: {message.path} at {message.timestamp.hour}:{message.timestamp.minute}')
                 else:
-                    print(f'{message.user.nickname}: {message.path}\n {message.timestamp}')
+                    print(f'{message.user.nickname}: {message.path} at {message.timestamp.hour}:{message.timestamp.minute}')
+
+    def show_message(self, message:str) -> None:
+        print(message) 
 
     def get_input_text(self) -> str:
         print("Insert the message to send")
@@ -53,8 +56,8 @@ class ChatMessagesDisplay(DisplayAbstract):
         return message
 
     def get_inputfile_name(self)-> str:
-        print("Insert the name of the file to send")
-        print("The extension of the file is needed")
-        print("Such as example.png")
+        print("\tInsert the name of the file to send")
+        print("\tThe extension of the file is needed")
+        print("\tSuch as example.png")
         media_name = input().strip()
         return media_name

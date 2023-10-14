@@ -6,7 +6,7 @@ class User:
         self.__check_nickname(nickname)
         self.__check_password(password)
         self.__nickname = nickname
-        self.__password = password
+        self.__password = hash(password)
         self.__id = uuid4()
 
     @property

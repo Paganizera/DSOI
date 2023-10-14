@@ -60,13 +60,13 @@ class UsersController(ControllersAbstract):
 
     def __do_password_validation(self) -> bool:
         password = self.__display.get_current_password()
-        return password == self.__current_user.password
+        return hash(password) == self.__current_user.password
     
     def login(self) -> None:
         nickname, password = self.__display.get_data()
         flag = False
         for user in self.__users:
-            if user.nickname == nickname and user.password == password:
+            if user.nickname == nickname and user.password == hash(password):
                 self.__current_user = user
                 flag = True
                 break
@@ -103,7 +103,7 @@ class UsersController(ControllersAbstract):
 
     def update(self) -> None:
         if self.__current_user is None:
-            self.__display.show_error('User not logged')
+            self.__display.show_error('User not logged in')
             return
         nickname, password = self.__display.get_data()
         self.__current_user.nickname = nickname
@@ -112,7 +112,7 @@ class UsersController(ControllersAbstract):
 
     def remove(self) -> None:
         if self.__current_user is None:
-            self.__display.show_error('User not logged')
+            self.__display.show_error('User not logged in')
             return
         if not self.__display.y_n_question('Are you sure you want to delete your account?'):
             return
