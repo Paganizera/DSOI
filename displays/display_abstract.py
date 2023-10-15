@@ -1,13 +1,9 @@
 from abc import ABC, abstractmethod
-from controllers.controllers_abstract import ControllersAbstract
 from subprocess import call
 from platform import system
 
 
 class DisplayAbstract(ABC):
-    def __init__(self, controller: ControllersAbstract):
-        self.__controller = controller
-
     @abstractmethod
     def show_options() -> str:
         pass

@@ -18,8 +18,8 @@ class ChatsController(ControllersAbstract):
             raise TypeError(f"Expected ControllersAbstract, got {type(app)}")
         self.__chats: list[Chat] = []
         self.__current_chat: Chat | None = None
-        self.__chat_list_display = ChatListDisplay(self)
-        self.__chat_messages_display = ChatMessagesDisplay(self)
+        self.__chat_list_display = ChatListDisplay()
+        self.__chat_messages_display = ChatMessagesDisplay()
         self.__app = app
 
     # Getter

@@ -1,5 +1,4 @@
 from .display_abstract import DisplayAbstract
-from controllers.controllers_abstract import ControllersAbstract
 from entities.chat import Chat
 from errors.custom_errors import InvalidOptionError
 from history.image_message import ImageMessage
@@ -8,12 +7,6 @@ from history.text_message import TextMessage
 
 
 class ChatMessagesDisplay(DisplayAbstract):
-    def __init__(self, controller: ControllersAbstract) -> None:
-        if not isinstance(controller, ControllersAbstract):
-            raise TypeError(f"Expected ControllersAbstract, got {type(controller)}")
-
-        super().__init__(controller)
-
     def show_display_header(self, chat: Chat) -> None:
         return super().show_display_header(
             f"Chat: {chat.name} ({len(chat.users)} users) [id: {chat.id}]"

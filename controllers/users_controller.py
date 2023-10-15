@@ -10,7 +10,7 @@ class UsersController(ControllersAbstract):
             raise TypeError(f"Expected ControllersAbstract, got {type(app)}")
         self.__current_user: None | User = None
         self.__users: list[User] = []
-        self.__display = UsersDisplay(self)
+        self.__display = UsersDisplay()
         self.__app = app
 
     #   Getters
