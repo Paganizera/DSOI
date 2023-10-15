@@ -22,12 +22,6 @@ class UsersController(ControllersAbstract):
     def users(self) -> list[User]:
         return self.__users
 
-    def __user_in_users(self, user: User) -> bool:
-        for u in self.__users:
-            if u == user:
-                return True
-        return False
-
     #   Returns from the current screen
     def exit(self) -> None:
         if self.__current_user is None:
