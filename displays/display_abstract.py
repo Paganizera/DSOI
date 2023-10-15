@@ -9,7 +9,7 @@ class DisplayAbstract(ABC):
         self.__controller = controller
 
     @abstractmethod
-    def show_options() -> int:
+    def show_options() -> str:
         pass
 
     def __clear_screen(self) -> None:
