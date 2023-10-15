@@ -30,7 +30,7 @@ class ChatMessagesDisplay(DisplayAbstract):
         print("\t6 - Exit chat")
         option = input("Option: ").strip()
         #   Validate input
-        if not self.is_valid_input(option, range(1, 6)):
+        if not self.is_valid_input(option, range(1, 7)):
             raise InvalidOptionError()
         return option
 
@@ -41,31 +41,19 @@ class ChatMessagesDisplay(DisplayAbstract):
         #   Still has an account or has no more
         #   And also analyzes the messagetype
         for message in messages:
+            if message.user == None:
+                nickname = "Deleted User"
+            else:
+                nickname = message.user.nickname
+            hour = str(message.timestamp.hour).zfill(2)
+            minute = str(message.timestamp.minute).zfill(2)
+            prefix = f"[{hour}:{minute}] {nickname}:"
             #   Text message print
             if isinstance(message, TextMessage):
-                if message.user == None:
-                    print(
-                        f"Deleted User: {message.text} at {message.timestamp.hour}:{message.timestamp.minute}"
-                    )
-                else:
-                    print(
-                        f"{message.user.nickname}: {message.text} at {message.timestamp.hour}:{message.timestamp.minute}"
-                    )
+                print(f"{prefix} {message.text}")
             #   Video message print
-            if isinstance(message, VideoMessage) or isinstance(message, ImageMessage):
-                if message.user == None:
-                    print(
-                        f"Deleted User: {message.path} at {message.timestamp.hour}:{message.timestamp.minute}"
-                    )
-                else:
-                    print(
-                        f"{message.user.nickname}: {message.path} at {message.timestamp.hour}:{message.timestamp.minute}"
-                    )
-
-    #   Used for custom messages to appear as system
-    #   alerts/statuses
-    def show_message(self, message: str) -> None:
-        print(message)
+            elif isinstance(message, (VideoMessage, ImageMessage)):
+                print(f"{prefix} {message.path}")
 
     #   Get the text content to send
     def get_input_text(self) -> str:

@@ -25,7 +25,7 @@ class DisplayAbstract(ABC):
         print("{:^{n}}".format(header, n=n))
         print("-" * n)
 
-    def is_valid_input(self, _input: str, _range: range) -> bool:
+    def is_valid_input(self, _input: str | int, _range: range) -> bool:
         # checks the _range type
         if not isinstance(_range, range):
             return False
@@ -52,6 +52,8 @@ class DisplayAbstract(ABC):
                 return False
             return option[0] == "y"
 
+    #   Used for custom messages to appear as system
+    #   alerts/statuses
     def show_message(self, message: str) -> None:
         print(message)
 

@@ -22,6 +22,12 @@ class UsersController(ControllersAbstract):
     def users(self) -> list[User]:
         return self.__users
 
+    def __user_in_users(self, user: User) -> bool:
+        for u in self.__users:
+            if u == user:
+                return True
+        return False
+
     #   Returns from the current screen
     def exit(self) -> None:
         if self.__current_user is None:
@@ -134,9 +140,23 @@ class UsersController(ControllersAbstract):
             return
         #   Updates the user
         nickname, password = self.__display.get_data()
-        self.__current_user.nickname = nickname
-        self.__current_user.password = password
-        self.__display.show_message("User updated")
+        try:
+            self.__current_user.check_nickname(nickname)
+            self.__current_user.check_password(password)
+        except Exception as e:
+            self.__display.show_error(str(e))
+            return
+        for user in self.__users:
+            if (
+                user.id != self.__current_user.id
+                and user.nickname == nickname
+            ):
+                self.__display.show_error("Nickname already exists")
+                break
+        else:
+            self.__current_user.nickname = nickname
+            self.__current_user.password = password
+            self.__display.show_message("User updated")
 
     #   Delete the user from the user list
     def remove(self) -> None:

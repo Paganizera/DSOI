@@ -275,8 +275,7 @@ class ChatsController(ControllersAbstract):
         #   The chat list
         elif len(chat.users) == 1:
             if self.__chat_messages_display.y_n_question(
-                "You are the only user in this chat.\
-                                                         Do you want to remove it?"
+                "You are the only user in this chat. Do you want to remove it?"
             ):
                 self.__chats.remove(chat)
                 self.__chat_messages_display.show_message("Chat removed")

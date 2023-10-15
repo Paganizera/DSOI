@@ -1,8 +1,5 @@
 from uuid import UUID, uuid4
 from .user import User
-from history.text_message import TextMessage
-from history.video_message import VideoMessage
-from history.image_message import ImageMessage
 from history.chat_history import ChatHistory
 
 
