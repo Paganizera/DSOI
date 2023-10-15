@@ -4,6 +4,9 @@ from platform import system
 
 
 class DisplayAbstract(ABC):
+    def __init__(self) -> None:
+        pass
+
     @abstractmethod
     def show_options() -> str:
         pass
