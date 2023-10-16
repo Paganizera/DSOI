@@ -18,8 +18,8 @@ class ChatsController(ControllersAbstract):
             raise TypeError(f"Expected ControllersAbstract, got {type(app)}")
         self.__chats: list[Chat] = []
         self.__current_chat: Chat | None = None
-        self.__chat_list_display = ChatListDisplay(self)
-        self.__chat_messages_display = ChatMessagesDisplay(self)
+        self.__chat_list_display = ChatListDisplay()
+        self.__chat_messages_display = ChatMessagesDisplay()
         self.__app = app
 
     # Getter
@@ -275,8 +275,7 @@ class ChatsController(ControllersAbstract):
         #   The chat list
         elif len(chat.users) == 1:
             if self.__chat_messages_display.y_n_question(
-                "You are the only user in this chat.\
-                                                         Do you want to remove it?"
+                "You are the only user in this chat. Do you want to remove it?"
             ):
                 self.__chats.remove(chat)
                 self.__chat_messages_display.show_message("Chat removed")

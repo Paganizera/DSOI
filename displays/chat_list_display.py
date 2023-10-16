@@ -1,20 +1,9 @@
 from .display_abstract import DisplayAbstract
-from controllers.controllers_abstract import ControllersAbstract
 from entities.chat import Chat
 from errors.custom_errors import InvalidOptionError
 
 
 class ChatListDisplay(DisplayAbstract):
-    def __init__(self, controller: ControllersAbstract) -> None:
-        if not isinstance(controller, ControllersAbstract):
-            raise TypeError(f"Expected ControllersAbstract, got {type(controller)}")
-        super().__init__(controller)
-
-    #   Display format for showing chats
-    def __show_chats(self, chats: list[Chat]):
-        for n, chat in enumerate(chats):
-            print(f"\t{n+1} - {chat.name} ({len(chat.users)} users)")
-
     #   Uses the parent's method for showing the header
     def show_display_header(self) -> None:
         return super().show_display_header("Chat List Menu")
@@ -33,6 +22,11 @@ class ChatListDisplay(DisplayAbstract):
         if not self.is_valid_input(option, range(1, 6)):
             raise InvalidOptionError()
         return option
+
+    #   Display format for showing chats
+    def __show_chats(self, chats: list[Chat]):
+        for n, chat in enumerate(chats):
+            print(f"\t{n+1} - {chat.name} ({len(chat.users)} users)")
 
     #   Shows all chats options and then returns the choosen one
     def get_chat_index(self, chats: list[Chat]) -> int:

@@ -12,7 +12,7 @@ class App(ControllersAbstract):
         #   Display
         self.__users_controller = UsersController(self)
         self.__chats_controller = ChatsController(self)
-        self.__display = MainDisplay(self)
+        self.__display = MainDisplay()
 
     #   Open the main display
     def open_screen(self) -> None:

@@ -1,15 +1,14 @@
 from abc import ABC, abstractmethod
-from controllers.controllers_abstract import ControllersAbstract
 from subprocess import call
 from platform import system
 
 
 class DisplayAbstract(ABC):
-    def __init__(self, controller: ControllersAbstract):
-        self.__controller = controller
+    def __init__(self) -> None:
+        pass
 
     @abstractmethod
-    def show_options() -> int:
+    def show_options() -> str:
         pass
 
     def __clear_screen(self) -> None:
@@ -25,7 +24,7 @@ class DisplayAbstract(ABC):
         print("{:^{n}}".format(header, n=n))
         print("-" * n)
 
-    def is_valid_input(self, _input: str, _range: range) -> bool:
+    def is_valid_input(self, _input: str | int, _range: range) -> bool:
         # checks the _range type
         if not isinstance(_range, range):
             return False
@@ -52,6 +51,8 @@ class DisplayAbstract(ABC):
                 return False
             return option[0] == "y"
 
+    #   Used for custom messages to appear as system
+    #   alerts/statuses
     def show_message(self, message: str) -> None:
         print(message)
 

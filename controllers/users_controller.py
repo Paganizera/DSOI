@@ -10,7 +10,7 @@ class UsersController(ControllersAbstract):
             raise TypeError(f"Expected ControllersAbstract, got {type(app)}")
         self.__current_user: None | User = None
         self.__users: list[User] = []
-        self.__display = UsersDisplay(self)
+        self.__display = UsersDisplay()
         self.__app = app
 
     #   Getters
@@ -134,9 +134,23 @@ class UsersController(ControllersAbstract):
             return
         #   Updates the user
         nickname, password = self.__display.get_data()
-        self.__current_user.nickname = nickname
-        self.__current_user.password = password
-        self.__display.show_message("User updated")
+        try:
+            self.__current_user.check_nickname(nickname)
+            self.__current_user.check_password(password)
+        except Exception as e:
+            self.__display.show_error(str(e))
+            return
+        for user in self.__users:
+            if (
+                user.id != self.__current_user.id
+                and user.nickname == nickname
+            ):
+                self.__display.show_error("Nickname already exists")
+                break
+        else:
+            self.__current_user.nickname = nickname
+            self.__current_user.password = password
+            self.__display.show_message("User updated")
 
     #   Delete the user from the user list
     def remove(self) -> None:

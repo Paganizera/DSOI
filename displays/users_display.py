@@ -1,17 +1,10 @@
 from .display_abstract import DisplayAbstract
-from controllers.controllers_abstract import ControllersAbstract
 from getpass import getpass
 from errors.custom_errors import InvalidOptionError
 from uuid import UUID
 
 
 class UsersDisplay(DisplayAbstract):
-    def __init__(self, controller: ControllersAbstract) -> None:
-        if not isinstance(controller, ControllersAbstract):
-            raise TypeError(f"Expected ControllersAbstract, got {type(controller)}")
-
-        super().__init__(controller)
-
     #   Inheritances the method from parent class
     def show_display_header(self) -> None:
         return super().show_display_header("Users Menu")
