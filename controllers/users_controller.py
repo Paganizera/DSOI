@@ -1,6 +1,7 @@
 from .controllers_abstract import ControllersAbstract
 from entities.user import User
 from displays.users_display import UsersDisplay
+from daos.user_dao import UserDAO
 from errors.custom_errors import InvalidOptionError
 
 
@@ -9,7 +10,7 @@ class UsersController(ControllersAbstract):
         if not isinstance(app, ControllersAbstract):
             raise TypeError(f"Expected ControllersAbstract, got {type(app)}")
         self.__current_user: None | User = None
-        self.__users: list[User] = []
+        self.__dao = UserDAO()
         self.__display = UsersDisplay()
         self.__app = app
 
@@ -18,9 +19,8 @@ class UsersController(ControllersAbstract):
     def current_user(self) -> None | User:
         return self.__current_user
 
-    @property
-    def users(self) -> list[User]:
-        return self.__users
+    def get_users(self) -> list[User]:
+        return self.__dao.get_all()
 
     #   Returns from the current screen
     def exit(self) -> None:
@@ -75,7 +75,7 @@ class UsersController(ControllersAbstract):
         flag = False
         #   Analyzes if the nickname and password's hash matches
         #   With the inputed data
-        for user in self.__users:
+        for user in self.get_users():
             if user.nickname == nickname and user.password == hash(password):
                 self.__current_user = user
                 flag = True
@@ -108,7 +108,7 @@ class UsersController(ControllersAbstract):
             return
         flag = True
         #   Checks for duplicated user
-        for _user in self.__users:
+        for _user in self.get_users():
             if user == _user:
                 flag = False
                 break
@@ -118,7 +118,7 @@ class UsersController(ControllersAbstract):
         #   If the user has valid inputs after the analyzis
         #   Then instantiate it and set it as the new
         #   current user, which means it's auto logged in
-        self.__users.append(user)
+        self.__dao.add(user.id, user)
         self.__current_user = user
         self.__display.show_message("User created")
 
@@ -140,7 +140,7 @@ class UsersController(ControllersAbstract):
         except Exception as e:
             self.__display.show_error(str(e))
             return
-        for user in self.__users:
+        for user in self.get_users():
             if (
                 user.id != self.__current_user.id
                 and user.nickname == nickname
@@ -169,7 +169,7 @@ class UsersController(ControllersAbstract):
             return
         #   Removes the user from the users list
         #   and also setts the current user as None
-        self.__users.remove(self.__current_user)
+        self.__dao.remove(self.__current_user.id)
         self.__current_user = None
         self.__display.show_message("User removed successfully")
 
