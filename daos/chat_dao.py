@@ -5,7 +5,8 @@ from entities.chat import Chat
 #cada entidade terá uma classe dessa, implementação bem simples.
 class UserDAO(DAO):
     def __init__(self):
-        super().__init__('../source/chats.pkl')
+        path = Path().parent / "source" / "chats.pkl"
+        super().__init__(path)
 
     def add(self, chat: Chat):
         if((chat is not None) and isinstance(chat, Chat) and isinstance(chat.id, UUID)): 

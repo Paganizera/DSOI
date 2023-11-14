@@ -1,5 +1,5 @@
 from uuid import UUID, uuid4
-
+import hashlib
 
 class User:
     #   Constructor
@@ -35,9 +35,7 @@ class User:
 
     @staticmethod
     def hash256(pw):
-        return hashlib.sha256(password.encode()).hexdigest()
-
-
+        return hashlib.sha256(pw.encode()).hexdigest()
 
     #   Avaliates duplicated users
     def __eq__(self, other: object) -> bool:

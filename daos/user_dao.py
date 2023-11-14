@@ -7,7 +7,7 @@ from pathlib import Path
 class UserDAO(DAO):
     def __init__(self):
         path = Path().parent / "source"/ "users.pkl"
-        super().__init__(str(path))
+        super().__init__(path)
 
     def add(self, user: User):
         if((user is not None) and isinstance(user, User) and isinstance(user.id, UUID)): 

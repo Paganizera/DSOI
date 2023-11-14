@@ -3,13 +3,17 @@ from abc import ABC, abstractmethod
 
 class DAO(ABC):
     @abstractmethod
-    def __init__(self, datasource=''):
+    def __init__(self, datasource: Path):
         self.__datasource = datasource
-        self.__cache = {} #é aqui que vai ficar a lista que estava no controlador. Nesse exemplo estamos usando um dicionario
+        dir = str(datasource.parent)
+        if not os.path.isdir(dir):
+            os.mkdir(dir)
         try:
             self.__load()
         except FileNotFoundError:
             self.__dump()
+        self.__cache = {} #é aqui que vai ficar a lista que estava no controlador. Nesse exemplo estamos usando um dicionario
+
 
     def __dump(self):
         pickle.dump(self.__cache, open(self.__datasource, 'wb'))

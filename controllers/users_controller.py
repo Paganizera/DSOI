@@ -3,7 +3,6 @@ from entities.user import User
 from displays.users_display import UsersDisplay
 from daos.user_dao import UserDAO
 from errors.custom_errors import InvalidOptionError
-import hashlib 
 
 class UsersController(ControllersAbstract):
     def __init__(self, app: ControllersAbstract) -> None:
