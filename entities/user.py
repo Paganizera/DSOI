@@ -7,7 +7,7 @@ class User:
         self.check_nickname(nickname)
         self.check_password(password)
         self.__nickname = nickname
-        self.__password = hash(password)
+        self.__password = User.hash256(password)
         self.__id = uuid4()
 
     #   Getters and Setters
@@ -27,11 +27,17 @@ class User:
     @password.setter
     def password(self, password: str) -> None:
         self.check_password(password)
-        self.__password = hash(password)
+        self.__password = User.hash256(password)
 
     @property
     def id(self) -> UUID:
         return self.__id
+
+    @staticmethod
+    def hash256(pw):
+        return hashlib.sha256(password.encode()).hexdigest()
+
+
 
     #   Avaliates duplicated users
     def __eq__(self, other: object) -> bool:

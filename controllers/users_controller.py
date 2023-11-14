@@ -3,7 +3,7 @@ from entities.user import User
 from displays.users_display import UsersDisplay
 from daos.user_dao import UserDAO
 from errors.custom_errors import InvalidOptionError
-
+import hashlib 
 
 class UsersController(ControllersAbstract):
     def __init__(self, app: ControllersAbstract) -> None:
@@ -65,7 +65,7 @@ class UsersController(ControllersAbstract):
     #   Private function responsable for validanting passwords
     def __do_password_validation(self) -> bool:
         password = self.__display.get_current_password()
-        return hash(password) == self.__current_user.password
+        return self.hash256(password) == self.__current_user.password
 
     #   Login function that checks wheter the inputed that is
     #   a valid one and set the current user if the inputs
@@ -76,7 +76,7 @@ class UsersController(ControllersAbstract):
         #   Analyzes if the nickname and password's hash matches
         #   With the inputed data
         for user in self.get_users():
-            if user.nickname == nickname and user.password == hash(password):
+            if user.nickname == nickname and user.password == User.hash256(password):
                 self.__current_user = user
                 flag = True
                 break
@@ -118,7 +118,7 @@ class UsersController(ControllersAbstract):
         #   If the user has valid inputs after the analyzis
         #   Then instantiate it and set it as the new
         #   current user, which means it's auto logged in
-        self.__dao.add(user.id, user)
+        self.__dao.add(user)
         self.__current_user = user
         self.__display.show_message("User created")
 

@@ -1,6 +1,7 @@
 from .users_controller import UsersController
 from .chats_controller import ChatsController
 from .controllers_abstract import ControllersAbstract
+import hashlib
 from displays.main_display import MainDisplay
 from entities.user import User
 from errors.custom_errors import InvalidOptionError
