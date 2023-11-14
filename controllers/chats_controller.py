@@ -8,7 +8,7 @@ from errors.custom_errors import InvalidOptionError
 from history.text_message import TextMessage
 from history.video_message import VideoMessage
 from history.image_message import ImageMessage
-
+from daos.chat_dao import ChatDAO
 
 class ChatsController(ControllersAbstract):
     #   Instantiating the class's constructor and also
@@ -16,7 +16,7 @@ class ChatsController(ControllersAbstract):
     def __init__(self, app: ControllersAbstract) -> None:
         if not isinstance(app, ControllersAbstract):
             raise TypeError(f"Expected ControllersAbstract, got {type(app)}")
-        self.__chats: list[Chat] = []
+        self.__dao: ChatDao()
         self.__current_chat: Chat | None = None
         self.__chat_list_display = ChatListDisplay()
         self.__chat_messages_display = ChatMessagesDisplay()
@@ -25,7 +25,7 @@ class ChatsController(ControllersAbstract):
     # Getter
     @property
     def chats(self) -> list[Chat]:
-        return self.__chats
+        return self.__dao.get_all()
 
     # Getter
     @property
@@ -35,7 +35,7 @@ class ChatsController(ControllersAbstract):
     #   Private function that analyzis wheter
     #   A Chat is or not in the chat list
     def __chat_in_list(self, chat: Chat) -> bool:
-        for c in self.__chats:
+        for c in self.__dao.get_all():
             if c == chat:
                 return True
         return False
@@ -44,7 +44,7 @@ class ChatsController(ControllersAbstract):
     #   The current user is in
     def __get_chats_user_is_in(self) -> list[Chat]:
         chats = []
-        for chat in self.__chats:
+        for chat in self.__dao.get_all():
             if chat.user_in_chat(self.__app.get_current_user()):
                 chats.append(chat)
         return chats
@@ -114,7 +114,7 @@ class ChatsController(ControllersAbstract):
         #   Auto add the current user to the new chat
         #   And then append it to the chat list
         chat.add_user(self.__app.get_current_user())
-        self.__chats.append(chat)
+        self.__dao.get_all().add(chat)
         self.__chat_list_display.show_message("Chat created")
 
     #   Setts a current chat by a choosen one
@@ -148,17 +148,17 @@ class ChatsController(ControllersAbstract):
         self.__chat_list_display.show_user_chats(chats)
 
     def browse_chats(self) -> None:
-        if self.__chats == []:
+        if self.__dao.get_all() == []:
             self.__chat_list_display.show_message("No chats to show")
             return
         try:
-            index = self.__chat_list_display.get_chat_index(self.__chats)
+            index = self.__chat_list_display.get_chat_index(self.__dao.get_all())
         except InvalidOptionError as e:
             self.__chat_list_display.show_error(str(e))
             return
         if index == -1:  # operation canceled
             return
-        chat = self.__chats[index]
+        chat = self.__dao.get_all()[index]
         if chat.user_in_chat(self.__app.get_current_user()):
             self.__chat_list_display.show_message("You are already in this chat")
             return
@@ -277,7 +277,7 @@ class ChatsController(ControllersAbstract):
             if self.__chat_messages_display.y_n_question(
                 "You are the only user in this chat. Do you want to remove it?"
             ):
-                self.__chats.remove(chat)
+                self.__dao.get_all().remove(chat)
                 self.__chat_messages_display.show_message("Chat removed")
             else:
                 self.__chat_messages_display.show_message("Chat not removed")

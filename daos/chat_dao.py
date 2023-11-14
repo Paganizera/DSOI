@@ -3,7 +3,7 @@ from uuid import UUID
 from entities.chat import Chat
 
 #cada entidade terá uma classe dessa, implementação bem simples.
-class UserDAO(DAO):
+class ChatDAO(DAO):
     def __init__(self):
         path = Path().parent / "source" / "chats.pkl"
         super().__init__(path)
