@@ -1,8 +1,9 @@
-from .controllers_abstract import ControllersAbstract
 from entities.user import User
-from displays.users_display import UsersDisplay
 from daos.user_dao import UserDAO
+from displays.users_display import UsersDisplay
 from errors.custom_errors import InvalidOptionError
+from .controllers_abstract import ControllersAbstract
+
 
 class UsersController(ControllersAbstract):
     def __init__(self, app: ControllersAbstract) -> None:
@@ -140,10 +141,7 @@ class UsersController(ControllersAbstract):
             self.__display.show_error(str(e))
             return
         for user in self.get_users():
-            if (
-                user.id != self.__current_user.id
-                and user.nickname == nickname
-            ):
+            if user.nickname == nickname and user.id != self.__current_user.id:
                 self.__display.show_error("Nickname already exists")
                 break
         else:

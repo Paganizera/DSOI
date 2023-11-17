@@ -1,26 +1,30 @@
-from .dao_abstract import DAO
 from uuid import UUID
-from entities.user import User
 from pathlib import Path
+from .dao_abstract import DAO
+from entities.user import User
 
-#cada entidade terá uma classe dessa, implementação bem simples.
+
 class UserDAO(DAO):
     def __init__(self):
-        path = Path().parent / "source"/ "users.pkl"
+        path = Path().parent / "source" / "users.pkl"
         super().__init__(path)
 
     def add(self, user: User):
-        if((user is not None) and isinstance(user, User) and isinstance(user.id, UUID)): 
-            super().add(user.id, user)
+        if isinstance(user, User) and isinstance(user.id, UUID):
+            return super().add(user.id, user)
+        return False
 
-    def update(self, user: User):
-        if((user is not None) and isinstance(user, User) and isinstance(user.id, UUID)):
-            super().update(user.id, user)
+    def update(self, user: User) -> bool:
+        if isinstance(user, User) and isinstance(user.id, UUID):
+            return super().update(user.id, user)
+        return False
 
-    def get(self, key:int):
-        if isinstance(key, int):
+    def get(self, key: UUID) -> User | None:
+        if isinstance(key, UUID):
             return super().get(key)
+        return False
 
-    def remove(selfself, key:int):
-        if(isinstance(key, int)):
+    def remove(selfself, key: UUID):
+        if isinstance(key, UUID):
             return super().remove(key)
+        return False

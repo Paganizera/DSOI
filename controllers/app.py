@@ -49,4 +49,4 @@ class App(ControllersAbstract):
 
     #   Returns all users in the system
     def get_all_users(self) -> list[User]:
-        return self.__users_controller.users
+        return self.__users_controller.get_users()

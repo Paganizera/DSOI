@@ -10,13 +10,14 @@ from history.video_message import VideoMessage
 from history.image_message import ImageMessage
 from daos.chat_dao import ChatDAO
 
+
 class ChatsController(ControllersAbstract):
     #   Instantiating the class's constructor and also
     #   Setting it's first atributtes
     def __init__(self, app: ControllersAbstract) -> None:
         if not isinstance(app, ControllersAbstract):
             raise TypeError(f"Expected ControllersAbstract, got {type(app)}")
-        self.__dao: ChatDao()
+        self.__dao = ChatDAO()
         self.__current_chat: Chat | None = None
         self.__chat_list_display = ChatListDisplay()
         self.__chat_messages_display = ChatMessagesDisplay()
@@ -114,8 +115,10 @@ class ChatsController(ControllersAbstract):
         #   Auto add the current user to the new chat
         #   And then append it to the chat list
         chat.add_user(self.__app.get_current_user())
-        self.__dao.get_all().add(chat)
-        self.__chat_list_display.show_message("Chat created")
+        if self.__dao.add(chat):
+            self.__chat_list_display.show_message("Chat created")
+        else:
+            self.__chat_list_display.show_error("Error: chat not created")
 
     #   Setts a current chat by a choosen one
     def open_my_chat(self) -> None:
@@ -159,6 +162,9 @@ class ChatsController(ControllersAbstract):
         if index == -1:  # operation canceled
             return
         chat = self.__dao.get_all()[index]
+        if chat is None:  # improbable error (should never happen)
+            self.__chat_list_display.show_error("Chat not found")
+            return
         if chat.user_in_chat(self.__app.get_current_user()):
             self.__chat_list_display.show_message("You are already in this chat")
             return
@@ -277,8 +283,10 @@ class ChatsController(ControllersAbstract):
             if self.__chat_messages_display.y_n_question(
                 "You are the only user in this chat. Do you want to remove it?"
             ):
-                self.__dao.get_all().remove(chat)
-                self.__chat_messages_display.show_message("Chat removed")
+                if self.__dao.remove(chat.id):
+                    self.__chat_messages_display.show_message("Chat removed")
+                else:
+                    self.__chat_messages_display.show_error("Chat could not be removed")
             else:
                 self.__chat_messages_display.show_message("Chat not removed")
                 return
