@@ -2,12 +2,10 @@ from abc import ABC, abstractmethod
 from subprocess import call
 from platform import system
 import PySimpleGUI as sg
+from . import data
 
 
 class DisplayAbstract(ABC):
-    HEIGHT = 500
-    WIDTH = 500
-
     def __init__(self) -> None:
         self.__window: None | sg.Window = None
         sg.ChangeLookAndFeel("DarkAmber")  # test
@@ -28,7 +26,7 @@ class DisplayAbstract(ABC):
             print('after close:', self.__window)
 
     def y_n_question(self, msg: str) -> bool:
-        retval = sg.popup_yes_no(msg, title="Confirm")
+        retval = sg.popup_yes_no(msg, title="Confirm", font=data.FONT)
         return retval == "Yes"
 
     def __clear_screen(self) -> None:
@@ -67,7 +65,7 @@ class DisplayAbstract(ABC):
     #   Used for custom messages to appear as system
     #   alerts/statuses
     def show_message(self, message: str) -> None:
-        sg.popup(message, title="Message")
+        sg.popup(message, title="Message", font=data.FONT)
 
     def show_error(self, error: str) -> None:
-        sg.popup_error(error, title="Error")
+        sg.popup_error(error, title="Error", font=data.FONT)
