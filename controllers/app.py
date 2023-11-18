@@ -1,10 +1,9 @@
+from entities.user import User
+from displays.main_display import MainDisplay
 from .users_controller import UsersController
 from .chats_controller import ChatsController
 from .controllers_abstract import ControllersAbstract
-import hashlib
-from displays.main_display import MainDisplay
-from entities.user import User
-from errors.custom_errors import InvalidOptionError
+from errors.custom_errors import ClosedProgramWindowError
 
 
 class App(ControllersAbstract):
@@ -18,9 +17,9 @@ class App(ControllersAbstract):
     #   Open the main display
     def open_screen(self) -> None:
         options = {
-            "1": self.__users_controller.open_screen,
-            "2": self.__chats_controller.open_screen,
-            "3": self.exit,
+            "users": self.__users_controller.open_screen,
+            "chat": self.__chats_controller.open_screen,
+            "exit": self.exit,
         }
         #   Keep it running for the purpouse of run
         #   More that one function
@@ -28,12 +27,11 @@ class App(ControllersAbstract):
             #   Handle input errors
             try:
                 option = self.__display.show_options()
-            except InvalidOptionError as e:
-                self.__display.show_error(str(e))
+            except ClosedProgramWindowError as e:
+                self.exit()
             else:
                 #   Run the selected function
                 options[option]()
-            self.__display.enter_to_continue()
 
     #   End program
     def exit(self):

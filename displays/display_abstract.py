@@ -8,7 +8,7 @@ from . import data
 class DisplayAbstract(ABC):
     def __init__(self) -> None:
         self.__window: None | sg.Window = None
-        sg.ChangeLookAndFeel("DarkAmber")  # test
+        sg.ChangeLookAndFeel("DarkAmber")
 
     @abstractmethod
     def show_options() -> str:
