@@ -98,7 +98,7 @@ class ChatsController(ControllersAbstract):
     def exit(self) -> None:
         self.__app.open_screen()
 
-    #   Add a chat by setting a chatname that doesn't exists
+    #   Add a chat by setting a chatname
     def add_chat(self) -> None:
         name = self.__chat_list_display.get_new_chat_name()
         try:
@@ -187,6 +187,7 @@ class ChatsController(ControllersAbstract):
         content = self.__chat_messages_display.get_input_text()
         message = TextMessage(content, user)
         self.__current_chat.chat_history.add_message(message)
+        self.__dao.update(self.__current_chat)
 
     #   Instead of getting a txt message, we must get
     #   A file's path so we can use it later when
@@ -210,6 +211,7 @@ class ChatsController(ControllersAbstract):
             #   And add it to the Chat's history
             message = VideoMessage(path, user)
             self.__current_chat.chat_history.add_message(message)
+            self.__dao.update(self.__current_chat)
 
     #   This function is almost the same as send_video_message
     #   But we change the precreated path to the images folder
@@ -228,6 +230,7 @@ class ChatsController(ControllersAbstract):
             #   And add it to the Chat's history
             message = ImageMessage(path, user)
             self.__current_chat.chat_history.add_message(message)
+            self.__dao.update(self.__current_chat)
 
     #   This function is responsable for updating the messages's
     #   When an user isn't found anymore
@@ -252,6 +255,7 @@ class ChatsController(ControllersAbstract):
         #   Finally we make the current messages from the
         #   ChatHistory class the updated ones
         self.__current_chat.chat_history.messages = chat_messages
+        self.__dao.update(self.__current_chat)
 
     #   This function is responsable for displaying
     #   All the messages from a chat
@@ -266,6 +270,7 @@ class ChatsController(ControllersAbstract):
     def close_chat(self) -> None:
         self.__current_chat = None
         self.__chat_list_display.show_message("Chat closed")
+        self.__dao.update(self.__current_chat)
 
     #   Removes a user from a chat by evaluating wheter it is
     #   The creator user, an abitrary user os the last in the
@@ -297,3 +302,4 @@ class ChatsController(ControllersAbstract):
             chat.remove_user(curr_user)
             self.__chat_messages_display.show_message("User removed from chat")
         self.__current_chat = None
+        self.__dao.update(self.__current_chat)
