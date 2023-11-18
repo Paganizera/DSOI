@@ -65,7 +65,7 @@ class UsersController(ControllersAbstract):
     #   Private function responsable for validanting passwords
     def __do_password_validation(self) -> bool:
         password = self.__display.get_current_password()
-        return self.hash256(password) == self.__current_user.password
+        return User.hash256(password) == self.__current_user.password
 
     #   Login function that checks wheter the inputed that is
     #   a valid one and set the current user if the inputs
