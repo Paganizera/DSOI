@@ -1,7 +1,7 @@
 from entities.user import User
 from daos.user_dao import UserDAO
 from displays.users_display import UsersDisplay
-from errors.custom_errors import InvalidOptionError
+from errors.custom_errors import ClosedProgramWindowError
 from .controllers_abstract import ControllersAbstract
 
 
@@ -33,21 +33,25 @@ class UsersController(ControllersAbstract):
     #   Screen manipulation
     def open_screen(self) -> None:
         options_logged = {
-            "1": self.logout,
-            "2": self.update,
-            "3": self.show_user_data,
-            "4": self.remove,
-            "5": self.exit,
+            "logout": self.logout,
+            "update": self.update,
+            "show": self.show_user_data,
+            "delete": self.remove,
+            "exit": self.exit,
         }
-        options_not_logged = {"1": self.login, "2": self.sign_in, "3": self.exit}
+        options_not_logged = {
+            "login": self.login, 
+            "signin": self.sign_in, 
+            "exit": self.exit
+        }
         #   Uses while to keep the code running
         while True:
             if self.__current_user is None:
                 #   Handle input miss inputs
                 try:
                     option = self.__display.show_options()
-                except InvalidOptionError as e:
-                    self.__display.show_error(str(e))
+                except ClosedProgramWindowError as e:
+                    self.__app.exit()
                 else:
                     #   Runs the choosen function
                     options_not_logged[option]()
@@ -55,23 +59,28 @@ class UsersController(ControllersAbstract):
                 #   Handle input miss inputs
                 try:
                     option = self.__display.show_options_logged()
-                except InvalidOptionError as e:
-                    self.__display.show_error(str(e))
+                except ClosedProgramWindowError as e:
+                    self.__app.exit()
                 else:
                     #   Runs the choosen function
                     options_logged[option]()
-            self.__display.enter_to_continue()
 
     #   Private function responsable for validanting passwords
     def __do_password_validation(self) -> bool:
-        password = self.__display.get_current_password()
-        return self.hash256(password) == self.__current_user.password
+        try:
+            password = self.__display.get_current_password()
+        except ClosedProgramWindowError:  # if the window was closed
+            return False  # then the validation fails
+        return User.hash256(password) == self.__current_user.password
 
     #   Login function that checks wheter the inputed that is
     #   a valid one and set the current user if the inputs
     #   matches with the users list
     def login(self) -> None:
-        nickname, password = self.__display.get_data()
+        try:
+            nickname, password = self.__display.get_data()
+        except ClosedProgramWindowError:  # if the window was closed
+            return  # then we return to the user menu
         flag = False
         #   Analyzes if the nickname and password's hash matches
         #   With the inputed data
@@ -98,7 +107,10 @@ class UsersController(ControllersAbstract):
 
     #   Here we instantiate a new user to our users list
     def sign_in(self) -> None:
-        nickname, password = self.__display.get_data()
+        try:
+            nickname, password = self.__display.get_data()
+        except ClosedProgramWindowError:  # if the window was closed
+            return  # then we return to the user menu
         #   Handle input error and instantiations ones's
         #   as well
         try:
@@ -133,7 +145,10 @@ class UsersController(ControllersAbstract):
             self.__display.show_error("Invalid password")
             return
         #   Updates the user
-        nickname, password = self.__display.get_data()
+        try:
+            nickname, password = self.__display.get_data()
+        except ClosedProgramWindowError:  # if the window was closed
+            return  # then we return to the user menu
         try:
             self.__current_user.check_nickname(nickname)
             self.__current_user.check_password(password)

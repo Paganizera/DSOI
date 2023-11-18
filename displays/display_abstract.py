@@ -1,15 +1,35 @@
 from abc import ABC, abstractmethod
 from subprocess import call
 from platform import system
+import PySimpleGUI as sg
 
 
 class DisplayAbstract(ABC):
+    HEIGHT = 500
+    WIDTH = 500
+
     def __init__(self) -> None:
-        pass
+        self.__window: None | sg.Window = None
+        sg.ChangeLookAndFeel("DarkAmber")  # test
 
     @abstractmethod
     def show_options() -> str:
         pass
+
+    #@abstractmethod
+    def init_components(self) -> None:
+        pass
+    
+    # isn't working in UsersDisplay
+    def close(self) -> None:
+        if self.__window is not None:
+            print('closing window', self.__window)
+            self.__window.close()
+            print('after close:', self.__window)
+
+    def y_n_question(self, msg: str) -> bool:
+        retval = sg.popup_yes_no(msg, title="Confirm")
+        return retval == "Yes"
 
     def __clear_screen(self) -> None:
         call("cls" if system() == "Windows" else "clear", shell=True)
@@ -44,17 +64,10 @@ class DisplayAbstract(ABC):
 
         return True
 
-    def y_n_question(self, msg: str) -> bool:
-        while True:
-            option = input(msg + " [y/n]: ").lower().strip()
-            if option == "":
-                return False
-            return option[0] == "y"
-
     #   Used for custom messages to appear as system
     #   alerts/statuses
     def show_message(self, message: str) -> None:
-        print(message)
+        sg.popup(message, title="Message")
 
     def show_error(self, error: str) -> None:
-        print("ERROR: " + error)
+        sg.popup_error(error, title="Error")

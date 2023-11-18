@@ -1,54 +1,126 @@
-from .display_abstract import DisplayAbstract
-from getpass import getpass
-from errors.custom_errors import InvalidOptionError
 from uuid import UUID
+import PySimpleGUI as sg
+from .display_abstract import DisplayAbstract
+from errors.custom_errors import ClosedProgramWindowError
 
 
 class UsersDisplay(DisplayAbstract):
-    #   Inheritances the method from parent class
-    def show_display_header(self) -> None:
-        return super().show_display_header("Users Menu")
+    def __main__(self) -> None:
+        super().__init__()
+    
+    def init_components(self) -> None:
+        layout = [
+            [sg.Text("Options Menu", size=(50, 1), justification="center", font=("Helvetica", 25), relief=sg.RELIEF_RIDGE)],
+            [sg.Radio("Login", "RADIO1", default=True, size=(10, 1), font=("Helvetica", 14), key="-LOGIN-")],
+            [sg.Radio("Sign in", "RADIO1", default=True, size=(10, 1), font=("Helvetica", 14), key="-SIGNIN-")],
+            [sg.Radio("Exit", "RADIO1", default=True, size=(10, 1), font=("Helvetica", 14), key="-EXIT-")],
+            [sg.Button("Ok", size=(10, 1), font=("Helvetica", 14))]
+        ]
+        self.__window = sg.Window("Users Menu", layout, size=(super().HEIGHT, super().WIDTH), finalize=True)
 
-    #   Options pannel
     def show_options(self) -> str:
-        self.show_display_header()
-        print("\t1 - Login")
-        print("\t2 - Sign in")
-        print("\t3 - Exit")
-        option = input("Option: ").strip()
+        self.init_components()
+        while True:
+            event, values = self.__window.read()
+            if event == "Ok":
+                if values["-LOGIN-"]:
+                    retval = 'login'
+                elif values["-SIGNIN-"]:
+                    retval = 'signin'
+                elif values["-EXIT-"]:
+                    retval = 'exit'
+                break
+            elif event == sg.WIN_CLOSED:
+                raise ClosedProgramWindowError()
+        self.__window.close()
+        #self.close()  # isn't working
+        return retval
 
-        #   Handle input errors
-        if not self.is_valid_input(option, range(1, 4)):
-            raise InvalidOptionError()
-        return option
+    def init_components_logged(self) -> None:
+        layout = [
+            [sg.Text("Options Menu", size=(50, 1), justification="center", font=("Helvetica", 25), relief=sg.RELIEF_RIDGE)],
+            [sg.Radio("Logout", "RADIO1", default=True, size=(20, 1), font=("Helvetica", 14), key="-LOGOUT-")],
+            [sg.Radio("Update user info", "RADIO1", default=True, size=(20, 1), font=("Helvetica", 14), key="-UPDATE-")],
+            [sg.Radio("Show user data", "RADIO1", default=True, size=(20, 1), font=("Helvetica", 14), key="-SHOW-")],
+            [sg.Radio("Delete user", "RADIO1", default=True, size=(20, 1), font=("Helvetica", 14), key="-DELETE-")],
+            [sg.Radio("Go to main menu", "RADIO1", default=True, size=(20, 1), font=("Helvetica", 14), key="-EXIT-")],
+            [sg.Button("Ok", size=(10, 1), font=("Helvetica", 14))]
+        ]
+        self.__window = sg.Window("Logged Users Menu", layout, size=(super().HEIGHT, super().WIDTH), finalize=True)
 
-    #   Options pannels when the user is logged in
-    def show_options_logged(self) -> str:
-        self.show_display_header()
-        print("\t1 - Logout")
-        print("\t2 - Update user info")
-        print("\t3 - Show user data")
-        print("\t4 - Delete user")
-        print("\t5 - Go to main menu")
-        option = input("Option: ").strip()
-
-        #   Handle input errors
-        if not self.is_valid_input(option, range(1, 6)):
-            raise InvalidOptionError()
-        return option
+    def show_options_logged(self) -> None:
+        self.init_components_logged()
+        while True:
+            event, values = self.__window.read()
+            if event == "Ok":
+                if values["-LOGOUT-"]:
+                    retval = 'logout'
+                elif values["-UPDATE-"]:
+                    retval = 'update'
+                elif values["-SHOW-"]:
+                    retval = 'show'
+                elif values["-DELETE-"]:
+                    retval = 'delete'
+                elif values["-EXIT-"]:
+                    retval = 'exit'
+                break
+            elif event == sg.WIN_CLOSED:
+                raise ClosedProgramWindowError()
+        self.__window.close()
+        #self.close()  # isn't working
+        return retval
 
     #   Gets a nickname and a password, then returns
     #   them as a tuple
     def get_data(self) -> tuple[str, str]:
-        nickname = input("Nickname: ").strip()
-        password = getpass("Password: ").strip()
-        return nickname, password
+        layout = [
+            [sg.Text("Nickname:", size=(15, 1)), sg.InputText(key="-NICKNAME-")],
+            [sg.Text("Password:", size=(15, 1)), sg.InputText(key="-PASSWORD-", password_char="*")],
+            [sg.Button("Ok", size=(10, 1), font=("Helvetica", 14))]
+        ]
+        self.__window = sg.Window("Get User Data", layout, size=(super().HEIGHT, super().WIDTH), finalize=True)
+        while True:
+            event, values = self.__window.read()
+            if event == "Ok":
+                retval = (values["-NICKNAME-"], values["-PASSWORD-"])
+                break
+            elif event == sg.WIN_CLOSED:
+                raise ClosedProgramWindowError()
+        self.__window.close()
+        #self.close()  # isn't working
+        return retval
 
     #   Returns current password
     def get_current_password(self) -> str:
-        return getpass("Current password: ")
+        layout = [
+            [sg.Text("Password:", size=(15, 1)), sg.InputText(key="-PASSWORD-", password_char="*")],
+            [sg.Button("Ok", size=(10, 1), font=("Helvetica", 14))]
+        ]
+        self.__window = sg.Window("Get Current Password", layout, size=(super().HEIGHT, super().WIDTH), finalize=True)
+        while True:
+            event, values = self.__window.read()
+            if event == "Ok":
+                retval = values["-PASSWORD-"]
+                break
+            elif event == sg.WIN_CLOSED:
+                raise ClosedProgramWindowError()
+        self.__window.close()
+        #self.close()  # isn't working
+        return retval
 
     #   Gets the user's info for displaying it
     def show_user_data(self, nickname: str, id: UUID) -> None:
-        print(f"\tNickname: '{nickname}'")
-        print(f"\tId      : '{id}'")
+        layout = [
+            [sg.Text(f"Nickname: {nickname}", size=(50, 1), justification="center", font=("Helvetica", 14))],
+            [sg.Text(f"Id: {id}", size=(50, 1), justification="center", font=("Helvetica", 14))],
+            [sg.Button("Ok", size=(10, 1), font=("Helvetica", 14))]
+        ]
+        self.__window = sg.Window("User Data", layout, size=(super().HEIGHT, super().WIDTH), finalize=True)
+        while True:
+            event, values = self.__window.read()
+            if event == "Ok":
+                break
+            elif event == sg.WIN_CLOSED:
+                raise ClosedProgramWindowError()
+        self.__window.close()
+        #self.close()  # isn't working

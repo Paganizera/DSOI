@@ -11,3 +11,7 @@ class InvalidMessagePathError(Exception):
 class InvalidOptionError(Exception):
     def __init__(self) -> None:
         super().__init__("The selected option is not a valid one")
+
+class ClosedProgramWindowError(Exception):
+    def __init__(self) -> None:
+        super().__init__("The window was closed")
