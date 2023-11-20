@@ -41,7 +41,7 @@ class UsersController(ControllersAbstract):
         }
         options_not_logged = {
             "login": self.login, 
-            "signin": self.sign_in, 
+            "signup": self.sign_up, 
             "exit": self.exit
         }
         #   Uses while to keep the code running
@@ -106,7 +106,7 @@ class UsersController(ControllersAbstract):
         self.__display.show_message("User logged out")
 
     #   Here we instantiate a new user to our users list
-    def sign_in(self) -> None:
+    def sign_up(self) -> None:
         try:
             nickname, password = self.__display.get_data()
         except ClosedProgramWindowError:  # if the window was closed

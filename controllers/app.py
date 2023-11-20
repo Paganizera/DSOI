@@ -18,7 +18,7 @@ class App(ControllersAbstract):
     def open_screen(self) -> None:
         options = {
             "users": self.__users_controller.open_screen,
-            "chat": self.__chats_controller.open_screen,
+            "chats": self.__chats_controller.open_screen,
             "exit": self.exit,
         }
         #   Keep it running for the purpouse of run

@@ -12,7 +12,7 @@ class UsersDisplay(DisplayAbstract):
         layout = [
             [sg.Text("Options Menu", size=(50, 1), justification="center", font=data.FONT_TITLE, relief=sg.RELIEF_RIDGE)],
             [sg.Radio("Login", "RADIO1", default=True, size=(10, 1), font=data.FONT, key="-LOGIN-")],
-            [sg.Radio("Sign in", "RADIO1", default=True, size=(10, 1), font=data.FONT, key="-SIGNIN-")],
+            [sg.Radio("Sign up", "RADIO1", default=True, size=(10, 1), font=data.FONT, key="-SIGNUP-")],
             [sg.Radio("Exit", "RADIO1", default=True, size=(10, 1), font=data.FONT, key="-EXIT-")],
             [sg.Button("Ok", size=(10, 1), font=data.FONT)]
         ]
@@ -25,8 +25,8 @@ class UsersDisplay(DisplayAbstract):
             if event == "Ok":
                 if values["-LOGIN-"]:
                     retval = 'login'
-                elif values["-SIGNIN-"]:
-                    retval = 'signin'
+                elif values["-SIGNUP-"]:
+                    retval = 'signup'
                 elif values["-EXIT-"]:
                     retval = 'exit'
                 break
@@ -48,7 +48,7 @@ class UsersDisplay(DisplayAbstract):
         ]
         self.__window = sg.Window("Logged Users Menu", layout, size=(data.HEIGHT, data.WIDTH), finalize=True)
 
-    def show_options_logged(self) -> None:
+    def show_options_logged(self) -> str:
         self.init_components_logged()
         while True:
             event, values = self.__window.read()

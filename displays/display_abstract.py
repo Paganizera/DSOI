@@ -29,12 +29,13 @@ class DisplayAbstract(ABC):
         retval = sg.popup_yes_no(msg, title="Confirm", font=data.FONT)
         return retval == "Yes"
 
+    #delete
     def __clear_screen(self) -> None:
         call("cls" if system() == "Windows" else "clear", shell=True)
-
+    #delete
     def enter_to_continue(self) -> None:
         input("Press enter to continue...")
-
+    #delete
     def show_display_header(self, header: str) -> None:
         self.__clear_screen()
         n = 50
@@ -42,6 +43,7 @@ class DisplayAbstract(ABC):
         print("{:^{n}}".format(header, n=n))
         print("-" * n)
 
+    #delete
     def is_valid_input(self, _input: str | int, _range: range) -> bool:
         # checks the _range type
         if not isinstance(_range, range):

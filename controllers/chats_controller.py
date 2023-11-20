@@ -4,7 +4,7 @@ from entities.chat import Chat
 from entities.user import User
 from displays.chat_list_display import ChatListDisplay
 from displays.chat_messages_display import ChatMessagesDisplay
-from errors.custom_errors import InvalidOptionError
+from errors.custom_errors import InvalidOptionError, ClosedProgramWindowError
 from history.text_message import TextMessage
 from history.video_message import VideoMessage
 from history.image_message import ImageMessage
@@ -53,11 +53,11 @@ class ChatsController(ControllersAbstract):
     #   Screen manipulation
     def open_screen(self) -> None:
         chat_list_options = {
-            "1": self.add_chat,
-            "2": self.open_my_chat,
-            "3": self.your_chats,
-            "4": self.browse_chats,
-            "5": self.exit,
+            "addchat": self.add_chat,
+            "openchat": self.open_my_chat,
+            "yourchats": self.your_chats,
+            "browsechats": self.browse_chats,
+            "exit": self.exit,
         }
         chat_options = {
             "1": self.send_text_message,
@@ -76,7 +76,8 @@ class ChatsController(ControllersAbstract):
                 #   Active Chat
                 try:
                     option = self.__chat_list_display.show_options()
-                except InvalidOptionError as e:
+                    print(option)
+                except ClosedProgramWindowError as e:
                     #   Catch error and then show it to the user
                     self.__chat_list_display.show_error(str(e))
                 else:
@@ -92,8 +93,6 @@ class ChatsController(ControllersAbstract):
                     self.__chat_messages_display.show_error(str(e))
                 else:
                     chat_options[option]()
-            self.__chat_list_display.enter_to_continue()
-
     #   Return screen
     def exit(self) -> None:
         self.__app.open_screen()
