@@ -16,12 +16,8 @@ class ChatMessagesDisplay(DisplayAbstract):
     def init_components(self) -> None:
         layout = [
             [sg.Text("Chat Options", size=(50, 1), justification="center", font=data.FONT_TITLE, relief=sg.RELIEF_RIDGE)],
-            [sg.Radio("Add Chat", "RADIO1", default=True, size=(10, 1), font=data.FONT, key="-TEXTMESSAGE-")],
-            [sg.Radio("Open Chat", "RADIO1", default=True, size=(10, 1), font=data.FONT, key="-VIDEOMESSAGE-")],
-            [sg.Radio("Your Chats", "RADIO1", default=True, size=(10, 1), font=data.FONT, key="-YOURCHATS-")],
-            [sg.Radio("Browse Chats", "RADIO1", default=True, size=(10, 1), font=data.FONT, key="-BROWSECHATS-")],
-            [sg.Radio("Exit", "RADIO1", default=True, size=(10, 1), font=data.FONT, key="-EXIT-")],
-            [sg.Button("Ok", size=(10, 1), font=data.FONT)]
+            [sg.InputText(key="-CHATNAME-", font=data.FONT), sg.Button("Enter", size=(10, 1), font=data.FONT)],
+            [sg.Button("Video", size=(10, 1), font=data.FONT),sg.Button("Image", size=(10, 1), font=data.FONT)  ],
         ]
         self.__window = sg.Window("Users Menu", layout, size=(data.HEIGHT, data.WIDTH), finalize=True)
     # Option pannel

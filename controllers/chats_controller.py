@@ -175,6 +175,7 @@ class ChatsController(ControllersAbstract):
     def validate_path(self, path: str) -> bool:
         return os.path.isfile(path)
 
+
     #   We get a message and then add it to the current
     #   Chat's history
     def send_text_message(self) -> None:
@@ -184,9 +185,9 @@ class ChatsController(ControllersAbstract):
         if not self.__current_chat.user_in_chat(user):
             raise Exception("User not found")
         content = self.__chat_messages_display.get_input_text()
-        message = TextMessage(content, user)
-        self.__current_chat.chat_history.add_message(message)
-        self.__dao.update(self.__current_chat)
+        retval = self.__current_chat.chat_history.add_text_message(content, user)
+        if not retval:
+            self.__chat_messages_display.show_error("Couldn't send message")
 
     #   Instead of getting a txt message, we must get
     #   A file's path so we can use it later when
@@ -208,9 +209,9 @@ class ChatsController(ControllersAbstract):
         else:
             #   If the message is valid, we create a new VideoMessage
             #   And add it to the Chat's history
-            message = VideoMessage(path, user)
-            self.__current_chat.chat_history.add_message(message)
-            self.__dao.update(self.__current_chat)
+            retval = self.__current_chat.chat_history.add_video_message(path, user)
+            if not retval:
+                self.__chat_messages_display.show_error("Couldn't send message")
 
     #   This function is almost the same as send_video_message
     #   But we change the precreated path to the images folder
@@ -227,11 +228,11 @@ class ChatsController(ControllersAbstract):
         else:
             #   If the message is valid, we create a new VideoMessage
             #   And add it to the Chat's history
-            message = ImageMessage(path, user)
-            self.__current_chat.chat_history.add_message(message)
-            self.__dao.update(self.__current_chat)
+            retval = self.__current_chat.chat_history.add_image_message(path, user)
+            if not retval:
+                self.__chat_messages_display.show_error("Couldn't send message")
 
-    #   This function is responsable for updating the messages's
+    #   This function is responsable for updating the messages
     #   When an user isn't found anymore
     def update_chat(self) -> None:
         users = self.__app.get_all_users()
@@ -254,7 +255,7 @@ class ChatsController(ControllersAbstract):
         #   Finally we make the current messages from the
         #   ChatHistory class the updated ones
         self.__current_chat.chat_history.messages = chat_messages
-        self.__dao.update(self.__current_chat)
+
 
     #   This function is responsable for displaying
     #   All the messages from a chat
