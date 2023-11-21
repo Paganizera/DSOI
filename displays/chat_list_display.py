@@ -5,7 +5,6 @@ import PySimpleGUI as sg
 from . import data
 from errors.custom_errors import ClosedProgramWindowError
 class ChatListDisplay(DisplayAbstract):
-    #   Uses the parent's method for showing the header
     def __main__(self) -> None:
         super().__init__()
 
@@ -75,18 +74,31 @@ class ChatListDisplay(DisplayAbstract):
     #   Shows all chats where the current user is
     #   For it to choose a chat
     def get_user_chat_index(self, chats: list[Chat]) -> int:
+        chat_names = [x.name for x in chats]
+        lst = sg.Listbox(chat_names, size=(20, 4), font=('Arial Bold', 14), auto_size_text=True, enable_events=True, expand_x=True, select_mode=sg.LISTBOX_SELECT_MODE_BROWSE ,key='-LIST-')
+        layout = [
+            [lst],
+            [sg.Button("Cancel", size=(10, 1), font=data.FONT), sg.Button("Open", size=(10, 1), font=data.FONT)]
+        ]
+        self.__window = sg.Window("ChatList", layout, size=(data.HEIGHT, data.WIDTH), finalize=True)
+        tmp = None
         while True:
-            #   Shows all chats
-            self.show_user_chats(chats)
-            index = input("\nSelect the chat you want to open (0 to cancel): ").strip()
-            #   Evaluate the input
-            if index == "0":
-                return -1
-            if not self.is_valid_input(index, range(1, len(chats) + 1)):
-                raise InvalidOptionError()
-            #   Returns the adjusted index
-            index = int(index) - 1
-            return index
+            event, values = self.__window.read()
+            if event == "-LIST-":
+                for chat in chats:
+                    if chat.name == values[event][0]:
+                        tmp = chats.index(chat)
+            if event == "Open":
+                if tmp is not None:
+                    retval = tmp
+                    break
+            if event == 'Cancel':
+                retval = -1
+                break
+            if event in (sg.WIN_CLOSED, 'Exit'):
+                break
+        self.__window.close()
+        return retval
 
     #   Show all chats where the user is in
     def show_user_chats(self, chats: list[Chat]) -> None:
@@ -116,4 +128,18 @@ class ChatListDisplay(DisplayAbstract):
 
     #   Changes the chat's name
     def get_new_chat_name(self) -> str:
-        return input("Chat name: ").strip()
+        layout = [
+            [sg.Text("New Chat Name:", size=(15, 1), font=data.FONT), sg.InputText(key="-CHATNAME-", font=data.FONT)],
+            [sg.Button("Cancel", size=(10, 1), font=data.FONT), sg.Button("Submit", size=(10, 1), font=data.FONT)]
+        ]
+        self.__window = sg.Window("Creating Chat", layout, size=(data.HEIGHT, data.WIDTH), finalize=True)
+        while True:
+            event, values = self.__window.read()
+            if event == "Submit":
+                retval = values["-CHATNAME-"]
+                break
+            elif event == sg.WIN_CLOSED:
+                raise ClosedProgramWindowError()
+        self.__window.close()
+        #self.close()  # isn't working
+        return retval

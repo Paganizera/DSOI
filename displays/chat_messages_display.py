@@ -1,31 +1,53 @@
 from .display_abstract import DisplayAbstract
 from entities.chat import Chat
-from errors.custom_errors import InvalidOptionError
+from errors.custom_errors import InvalidOptionError, ClosedProgramWindowError
 from history.image_message import ImageMessage
 from history.video_message import VideoMessage
 from history.text_message import TextMessage
-
+import PySimpleGUI as sg
+from . import data
 
 class ChatMessagesDisplay(DisplayAbstract):
-    def show_display_header(self, chat: Chat) -> None:
-        return super().show_display_header(
-            f"Chat: {chat.name} ({len(chat.users)} users) [id: {chat.id}]"
-        )
+    def __main__(self) -> None:
+        super().__init__()
 
+
+
+    def init_components(self) -> None:
+        layout = [
+            [sg.Text("Chat Options", size=(50, 1), justification="center", font=data.FONT_TITLE, relief=sg.RELIEF_RIDGE)],
+            [sg.Radio("Add Chat", "RADIO1", default=True, size=(10, 1), font=data.FONT, key="-TEXTMESSAGE-")],
+            [sg.Radio("Open Chat", "RADIO1", default=True, size=(10, 1), font=data.FONT, key="-VIDEOMESSAGE-")],
+            [sg.Radio("Your Chats", "RADIO1", default=True, size=(10, 1), font=data.FONT, key="-YOURCHATS-")],
+            [sg.Radio("Browse Chats", "RADIO1", default=True, size=(10, 1), font=data.FONT, key="-BROWSECHATS-")],
+            [sg.Radio("Exit", "RADIO1", default=True, size=(10, 1), font=data.FONT, key="-EXIT-")],
+            [sg.Button("Ok", size=(10, 1), font=data.FONT)]
+        ]
+        self.__window = sg.Window("Users Menu", layout, size=(data.HEIGHT, data.WIDTH), finalize=True)
     # Option pannel
     def show_options(self, chat: Chat) -> str:
-        self.show_display_header(chat)
-        print("\t1 - Send text message")
-        print("\t2 - Send video message")
-        print("\t3 - Send image message")
-        print("\t4 - Chat history")
-        print("\t5 - Close chat")
-        print("\t6 - Exit chat")
-        option = input("Option: ").strip()
-        #   Validate input
-        if not self.is_valid_input(option, range(1, 7)):
-            raise InvalidOptionError()
-        return option
+        self.init_components()
+        while True:
+            event, values = self.__window.read()
+            if event == "Ok":
+                if values["-TEXTMESSAGE-"]:
+                    retval = 'addchat'
+                elif values["-VIDEOMESSAGE-"]:
+                    retval = 'openchat'
+                elif values["-IMAGEMESSAGE-"]:
+                    retval = 'yourchats'
+                elif values["-CHATHISTORY-"]:
+                    retval = 'browsechats'
+                elif values["-CLOSECHAT-"]:
+                    retval = 'exit'
+                elif values["EXIT"]:
+                    retval = 'exit'
+                break
+            elif event == sg.WIN_CLOSED:
+                raise ClosedProgramWindowError()
+        self.__window.close()
+        #self.close()  # isn't working
+        return retval
 
     #   Shows all messages from the current chat's ChatHistory
     def show_messages(self, chat: Chat) -> None:
