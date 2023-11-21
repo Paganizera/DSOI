@@ -60,12 +60,12 @@ class ChatsController(ControllersAbstract):
             "exit": self.exit,
         }
         chat_options = {
-            "1": self.send_text_message,
-            "2": self.send_video_message,
-            "3": self.send_image_message,
-            "4": self.chat_history,
-            "5": self.close_chat,
-            "6": self.remove_user_from_chat,
+            "textmessage": self.send_text_message,
+            "videomessage": self.send_video_message,
+            "imagemessage": self.send_image_message,
+            "close": self.close_chat,
+            "removeuser": self.remove_user_from_chat,
+            'exit': self.exit,
         }
         #   While True makes the code to keep running
         #   For the purpouse of making avaiable to
@@ -86,13 +86,16 @@ class ChatsController(ControllersAbstract):
             else:
                 #   Selection pannel for an active chat
                 try:
+                    messages = self.get_messages(self.__current_chat)
                     option = self.__chat_messages_display.show_options(
-                        self.__current_chat
+                        messages
                     )
+                    print(messages)
                 except InvalidOptionError as e:
                     self.__chat_messages_display.show_error(str(e))
                 else:
                     chat_options[option]()
+                    print("A")
     #   Return screen
     def exit(self) -> None:
         self.__app.open_screen()
@@ -185,9 +188,12 @@ class ChatsController(ControllersAbstract):
         if not self.__current_chat.user_in_chat(user):
             raise Exception("User not found")
         content = self.__chat_messages_display.get_input_text()
+        print("A")
         retval = self.__current_chat.chat_history.add_text_message(content, user)
+        print("B")
         if not retval:
             self.__chat_messages_display.show_error("Couldn't send message")
+        print("C")
 
     #   Instead of getting a txt message, we must get
     #   A file's path so we can use it later when
@@ -303,3 +309,29 @@ class ChatsController(ControllersAbstract):
             self.__chat_messages_display.show_message("User removed from chat")
         self.__current_chat = None
         self.__dao.update(self.__current_chat)
+
+
+
+    #   Shows all messages from the current chat's ChatHistory
+    def get_messages(self, chat: Chat) -> None:
+        messages = chat.chat_history.messages
+        #   Different prints wheter the user who sent
+        #   Still has an account or has no more
+        #   And also analyzes the messagetype
+        msg_list = []
+        for message in messages:
+            if message.user == None:
+                nickname = "Deleted User"
+            else:
+                nickname = message.user.nickname
+            hour = str(message.timestamp.hour).zfill(2)
+            minute = str(message.timestamp.minute).zfill(2)
+            prefix = f"[{hour}:{minute}] {nickname}:"
+            #   Text message print
+            if isinstance(message, TextMessage):
+                msg_list.append(str(f"{prefix} {message.text}"))
+            #   Video message print
+            elif isinstance(message, (VideoMessage, ImageMessage)):
+                msg_list.append(str(f"{prefix} {message.path}"))
+
+        return msg_list

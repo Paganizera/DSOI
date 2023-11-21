@@ -12,31 +12,37 @@ class ChatMessagesDisplay(DisplayAbstract):
         super().__init__()
 
 
-
-    def init_components(self) -> None:
+    #   Shows available options
+    def init_components(self, messages: []) -> None:
+        print(messages)
+        lst = sg.Listbox(messages, size=(20, 4), font=('Arial Bold', 14), auto_size_text=True, enable_events=True, expand_x=True, select_mode=sg.LISTBOX_SELECT_MODE_BROWSE ,key='-LIST-')
         layout = [
-            [sg.Text("Chat Options", size=(50, 1), justification="center", font=data.FONT_TITLE, relief=sg.RELIEF_RIDGE)],
-            [sg.InputText(key="-CHATNAME-", font=data.FONT), sg.Button("Enter", size=(10, 1), font=data.FONT)],
-            [sg.Button("Video", size=(10, 1), font=data.FONT),sg.Button("Image", size=(10, 1), font=data.FONT)  ],
+            [sg.Text("Chat Screen", size=(50, 1), justification="center", font=data.FONT_TITLE, relief=sg.RELIEF_RIDGE)],
+            [lst],
+            [sg.Radio("Send Message", "RADIO1", default=True, size=(10, 1), font=data.FONT, key="-TXTMSG-")],
+            [sg.Radio("Send Image", "RADIO1", default=True, size=(10, 1), font=data.FONT, key="-IMGMSG-")],
+            [sg.Radio("Send Video", "RADIO1", default=True, size=(10, 1), font=data.FONT, key="-VDOMSG-")],
+            [sg.Radio("Remove User", "RADIO1", default=True, size=(10, 1), font=data.FONT, key="-RMUSER-")],
+            [sg.Radio("Exit Chat", "RADIO1", default=True, size=(10, 1), font=data.FONT, key="-EXIT-")],
+            [sg.Button("Ok", size=(10, 1), font=data.FONT)]
         ]
         self.__window = sg.Window("Users Menu", layout, size=(data.HEIGHT, data.WIDTH), finalize=True)
-    # Option pannel
-    def show_options(self, chat: Chat) -> str:
-        self.init_components()
+
+
+    def show_options(self, messages: []) -> str:
+        self.init_components(messages)
         while True:
             event, values = self.__window.read()
             if event == "Ok":
-                if values["-TEXTMESSAGE-"]:
-                    retval = 'addchat'
-                elif values["-VIDEOMESSAGE-"]:
-                    retval = 'openchat'
-                elif values["-IMAGEMESSAGE-"]:
-                    retval = 'yourchats'
-                elif values["-CHATHISTORY-"]:
-                    retval = 'browsechats'
-                elif values["-CLOSECHAT-"]:
-                    retval = 'exit'
-                elif values["EXIT"]:
+                if values["-TXTMSG-"]:
+                    retval = 'textmessage'
+                elif values["-IMGMSG-"]:
+                    retval = 'imagemessage'
+                elif values["-VDOMSG-"]:
+                    retval = 'videomessage'
+                elif values["-RMUSER-"]:
+                    retval = 'removeuser'
+                elif values["-EXIT-"]:
                     retval = 'exit'
                 break
             elif event == sg.WIN_CLOSED:
@@ -45,31 +51,13 @@ class ChatMessagesDisplay(DisplayAbstract):
         #self.close()  # isn't working
         return retval
 
-    #   Shows all messages from the current chat's ChatHistory
-    def show_messages(self, chat: Chat) -> None:
-        messages = chat.chat_history.messages
-        #   Different prints wheter the user who sent
-        #   Still has an account or has no more
-        #   And also analyzes the messagetype
-        for message in messages:
-            if message.user == None:
-                nickname = "Deleted User"
-            else:
-                nickname = message.user.nickname
-            hour = str(message.timestamp.hour).zfill(2)
-            minute = str(message.timestamp.minute).zfill(2)
-            prefix = f"[{hour}:{minute}] {nickname}:"
-            #   Text message print
-            if isinstance(message, TextMessage):
-                print(f"{prefix} {message.text}")
-            #   Video message print
-            elif isinstance(message, (VideoMessage, ImageMessage)):
-                print(f"{prefix} {message.path}")
 
+    ############DELETE AND CHANGE TO SEND MESSAGE###########
     #   Get the text content to send
     def get_input_text(self) -> str:
-        print("Insert the message to send")
-        message = input().strip()
+        message = sg.popup_get_text('Enter the message', title="Message Input")        
+        message = message.strip()
+        self.__window.close()
         return message
 
     # Get the media's name that the user wants to send

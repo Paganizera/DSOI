@@ -2,7 +2,7 @@ from history.base_message import BaseMessage
 from .text_message import TextMessage
 from .image_message import ImageMessage
 from .video_message import VideoMessage
-from entities import User
+from entities.user import User
 
 class ChatHistory:
     def __init__(self):
