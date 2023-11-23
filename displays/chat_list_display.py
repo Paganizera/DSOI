@@ -15,7 +15,7 @@ class ChatListDisplay(DisplayAbstract):
             [sg.Radio("Add Chat", "RADIO1", default=True, size=(10, 1), font=data.FONT, key="-ADDCHAT-")],
             [sg.Radio("Open Chat", "RADIO1", default=True, size=(10, 1), font=data.FONT, key="-OPENCHAT-")],
             [sg.Radio("Your Chats", "RADIO1", default=True, size=(10, 1), font=data.FONT, key="-YOURCHATS-")],
-            [sg.Radio("Browse Chats", "RADIO1", default=True, size=(10, 1), font=data.FONT, key="-BROWSECHATS-")],
+            [sg.Radio("Browse Chats", "RADIO1", default=True, size=(12, 1), font=data.FONT, key="-BROWSECHATS-")],
             [sg.Radio("Exit", "RADIO1", default=True, size=(10, 1), font=data.FONT, key="-EXIT-")],
             [sg.Button("Ok", size=(10, 1), font=data.FONT)]
         ]

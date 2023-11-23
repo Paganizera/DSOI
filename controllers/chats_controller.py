@@ -1,4 +1,6 @@
-import os.path
+import shutil
+import os
+from pathlib import Path
 from .controllers_abstract import ControllersAbstract
 from entities.chat import Chat
 from entities.user import User
@@ -76,7 +78,6 @@ class ChatsController(ControllersAbstract):
                 #   Active Chat
                 try:
                     option = self.__chat_list_display.show_options()
-                    print(option)
                 except ClosedProgramWindowError as e:
                     #   Catch error and then show it to the user
                     self.__chat_list_display.show_error(str(e))
@@ -90,12 +91,10 @@ class ChatsController(ControllersAbstract):
                     option = self.__chat_messages_display.show_options(
                         messages
                     )
-                    print(messages)
                 except InvalidOptionError as e:
                     self.__chat_messages_display.show_error(str(e))
                 else:
                     chat_options[option]()
-                    print("A")
     #   Return screen
     def exit(self) -> None:
         self.__app.open_screen()
@@ -188,12 +187,9 @@ class ChatsController(ControllersAbstract):
         if not self.__current_chat.user_in_chat(user):
             raise Exception("User not found")
         content = self.__chat_messages_display.get_input_text()
-        print("A")
         retval = self.__current_chat.chat_history.add_text_message(content, user)
-        print("B")
         if not retval:
             self.__chat_messages_display.show_error("Couldn't send message")
-        print("C")
 
     #   Instead of getting a txt message, we must get
     #   A file's path so we can use it later when
@@ -227,14 +223,19 @@ class ChatsController(ControllersAbstract):
             raise TypeError(f"Expected User, got {type(user)}")
         if not self.__current_chat.user_in_chat(user):
             raise Exception("User not found")
-        path = "./media/image/"
-        path += self.__chat_messages_display.get_inputfile_name()
+        path = self.__chat_messages_display.get_inputfile_name()
         if not self.validate_path(path):
             self.__chat_messages_display.show_message("No file found")
         else:
             #   If the message is valid, we create a new VideoMessage
             #   And add it to the Chat's history
-            retval = self.__current_chat.chat_history.add_image_message(path, user)
+            chatdir = str(Path(__file__).parent.parent)+'/data/'+self.current_chat.name+'/'
+            filename = path.split('/')
+            if not os.path.isdir(chatdir):
+                os.mkdir(chatdir)
+            filedir = chatdir+ str(filename[-1])
+            shutil.copyfile(path, filedir)
+            retval = self.__current_chat.chat_history.add_image_message(filedir, user)
             if not retval:
                 self.__chat_messages_display.show_error("Couldn't send message")
 
