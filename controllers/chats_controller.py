@@ -115,7 +115,7 @@ class ChatsController(ControllersAbstract):
             return
         #   Auto add the current user to the new chat
         #   And then append it to the chat list
-        chatdir = str(Path(__file__).parent.parent)+'/data/'+name+'/'
+        chatdir = str(Path(__file__).parent.parent)+'/data/'+name
         if not os.path.isdir(chatdir):
             os.mkdir(chatdir)
         chat.add_user(self.__app.get_current_user().id)
