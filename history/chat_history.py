@@ -23,16 +23,16 @@ class ChatHistory:
             return True
         return False
     
-    def add_image_message(self, path: str, user: User) -> bool:
+    def add_image_message(self, path: str, filename: str, user: User) -> bool:
         if isinstance(path, str) and isinstance(user, User):
-            msg = ImageMessage(path, user)
+            msg = ImageMessage(path, filename, user)
             self.__messages.append(msg)
             return True
         return False
 
-    def add_video_message(self, path: str, user: User) -> bool:
+    def add_video_message(self, path: str, filename: str, user: User) -> bool:
         if isinstance(path, str) and isinstance(user, User):
-            msg = VideoMessage(path, user)
+            msg = VideoMessage(path, filename, user)
             self.__messages.append(msg)
             return True
         return False

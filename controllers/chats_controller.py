@@ -115,6 +115,9 @@ class ChatsController(ControllersAbstract):
             return
         #   Auto add the current user to the new chat
         #   And then append it to the chat list
+        chatdir = str(Path(__file__).parent.parent)+'/data/'+name+'/'
+        if not os.path.isdir(chatdir):
+            os.mkdir(chatdir)
         chat.add_user(self.__app.get_current_user())
         if self.__dao.add(chat):
             self.__chat_list_display.show_message("Chat created")
@@ -200,30 +203,7 @@ class ChatsController(ControllersAbstract):
             raise TypeError(f"Expected User, got {type(user)}")
         if not self.__current_chat.user_in_chat(user):
             raise Exception("User not found")
-        #   Here we precreate the media's path for making it
-        #   Easier to the user for just texting the file's name
-        path = "./media/video/"
-        path += self.__chat_messages_display.get_inputfile_name()
-        #   We validate the path, if it's not valid we raise
-        #   A custom Exception
-        if not self.validate_path(path):
-            self.__chat_messages_display.show_message("No file found")
-        else:
-            #   If the message is valid, we create a new VideoMessage
-            #   And add it to the Chat's history
-            retval = self.__current_chat.chat_history.add_video_message(path, user)
-            if not retval:
-                self.__chat_messages_display.show_error("Couldn't send message")
-
-    #   This function is almost the same as send_video_message
-    #   But we change the precreated path to the images folder
-    def send_image_message(self) -> None:
-        user = self.__app.get_current_user()
-        if not isinstance(user, User):
-            raise TypeError(f"Expected User, got {type(user)}")
-        if not self.__current_chat.user_in_chat(user):
-            raise Exception("User not found")
-        path = self.__chat_messages_display.get_inputfile_name()
+        path = self.__chat_messages_display.get_input_image()
         if not self.validate_path(path):
             self.__chat_messages_display.show_message("No file found")
         else:
@@ -235,7 +215,31 @@ class ChatsController(ControllersAbstract):
                 os.mkdir(chatdir)
             filedir = chatdir+ str(filename[-1])
             shutil.copyfile(path, filedir)
-            retval = self.__current_chat.chat_history.add_image_message(filedir, user)
+            retval = self.__current_chat.chat_history.add_video_message(filedir,filename[-1], user)
+            if not retval:
+                self.__chat_messages_display.show_error("Couldn't send message")
+
+    #   This function is almost the same as send_video_message
+    #   But we change the precreated path to the images folder
+    def send_image_message(self) -> None:
+        user = self.__app.get_current_user()
+        if not isinstance(user, User):
+            raise TypeError(f"Expected User, got {type(user)}")
+        if not self.__current_chat.user_in_chat(user):
+            raise Exception("User not found")
+        path = self.__chat_messages_display.get_input_image()
+        if not self.validate_path(path):
+            self.__chat_messages_display.show_message("No file found")
+        else:
+            #   If the message is valid, we create a new VideoMessage
+            #   And add it to the Chat's history
+            chatdir = str(Path(__file__).parent.parent)+'/data/'+self.current_chat.name+'/'
+            filename = path.split('/')
+            if not os.path.isdir(chatdir):
+                os.mkdir(chatdir)
+            filedir = chatdir+ str(filename[-1])
+            shutil.copyfile(path, filedir)
+            retval = self.__current_chat.chat_history.add_image_message(filedir,filename[-1], user)
             if not retval:
                 self.__chat_messages_display.show_error("Couldn't send message")
 
@@ -297,6 +301,8 @@ class ChatsController(ControllersAbstract):
             ):
                 if self.__dao.remove(chat.id):
                     self.__chat_messages_display.show_message("Chat removed")
+                    path = str(Path(__file__).parent.parent)+'/data/'+self.__current_chat.name+'/'
+                    shutil.rmtree(path)
                 else:
                     self.__chat_messages_display.show_error("Chat could not be removed")
             else:
@@ -333,6 +339,6 @@ class ChatsController(ControllersAbstract):
                 msg_list.append(str(f"{prefix} {message.text}"))
             #   Video message print
             elif isinstance(message, (VideoMessage, ImageMessage)):
-                msg_list.append(str(f"{prefix} {message.path}"))
+                msg_list.append(str(f"{prefix} {message.filename}"))
 
         return msg_list

@@ -57,7 +57,7 @@ class ChatMessagesDisplay(DisplayAbstract):
         return message
 
     # Get the media's name that the user wants to send
-    def get_inputfile_name(self) -> str:
+    def get_input_image(self) -> str:
         layout = [
             [sg.Text('Enter a filename:')],
             [sg.Input(sg.user_settings_get_entry('-filename-', ''), key='-IN-'), sg.FileBrowse(file_types=(
@@ -72,11 +72,34 @@ class ChatMessagesDisplay(DisplayAbstract):
             if event == "Save":
                 retval = str(values["-IN-"])
                 break
-            elif event == "Exit Without Saving":
+            elif event == "Exit":
                 retval = None
                 break
             elif event == sg.WIN_CLOSED:
                 raise ClosedProgramWindowError()
         self.__window.close()
         return retval
-    
+
+    def get_input_video(self) -> str:
+            layout = [
+                [sg.Text('Enter a filename:')],
+                [sg.Input(sg.user_settings_get_entry('-filename-', ''), key='-IN-'), sg.FileBrowse(file_types=(
+                   ("MP4 Files", "*.mp4"),("M4V Files", "*.m4v"), ("MKV Files", "*.mkv")
+                    ))],
+                [sg.B('Save'), sg.B('Exit Without Saving', key='Exit')]
+                ]
+            self.__window = sg.Window("Users Menu", layout, size=(data.HEIGHT, data.WIDTH), finalize=True)
+            event, values = self.__window.read()
+            while True:
+                event, values = self.__window.read()
+                if event == "Save":
+                    retval = str(values["-IN-"])
+                    break
+                elif event == "Exit Without Saving":
+                    retval = None
+                    break
+                elif event == sg.WIN_CLOSED:
+                    raise ClosedProgramWindowError()
+            self.__window.close()
+            return retval
+        
