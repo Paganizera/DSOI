@@ -9,7 +9,7 @@ class UserDAO(DAO):
         path = Path().parent / "source" / "users.pkl"
         super().__init__(path)
 
-    def add(self, user: User):
+    def add(self, user: User) -> bool:
         if isinstance(user, User) and isinstance(user.id, UUID):
             return super().add(user.id, user)
         return False
@@ -24,7 +24,7 @@ class UserDAO(DAO):
             return super().get(key)
         return False
 
-    def remove(selfself, key: UUID):
+    def remove(selfself, key: UUID) -> bool:
         if isinstance(key, UUID):
             return super().remove(key)
         return False

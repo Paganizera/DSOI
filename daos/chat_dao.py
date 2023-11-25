@@ -9,7 +9,7 @@ class ChatDAO(DAO):
         path = Path().parent / "source" / "chats.pkl"
         super().__init__(path)
 
-    def add(self, chat: Chat):
+    def add(self, chat: Chat) -> bool:
         if isinstance(chat, Chat) and isinstance(chat.id, UUID):
             return super().add(chat.id, chat)
         return False
@@ -19,12 +19,12 @@ class ChatDAO(DAO):
             return super().update(chat.id, chat)
         return False
 
-    def get(self, key: UUID):
+    def get(self, key: UUID) -> Chat | None:
         if isinstance(key, UUID):
             return super().get(key)
         return None
 
-    def remove(selfself, key: UUID):
+    def remove(selfself, key: UUID) -> bool:
         if isinstance(key, UUID):
             return super().remove(key)
         return False
