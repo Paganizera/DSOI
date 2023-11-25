@@ -48,7 +48,7 @@ class ChatsController(ControllersAbstract):
     def __get_chats_user_is_in(self) -> list[Chat]:
         chats = []
         for chat in self.__dao.get_all():
-            if chat.user_in_chat(self.__app.get_current_user()):
+            if chat.user_in_chat(self.__app.get_current_user().id):
                 chats.append(chat)
         return chats
 
@@ -104,7 +104,7 @@ class ChatsController(ControllersAbstract):
         name = self.__chat_list_display.get_new_chat_name()
         try:
             #   Instantiates a new chat
-            chat = Chat(name, self.__app.get_current_user())
+            chat = Chat(name, self.__app.get_current_user().id)
         except Exception as e:
             self.__chat_list_display.show_error(str(e))
             return
@@ -118,7 +118,7 @@ class ChatsController(ControllersAbstract):
         chatdir = str(Path(__file__).parent.parent)+'/data/'+name+'/'
         if not os.path.isdir(chatdir):
             os.mkdir(chatdir)
-        chat.add_user(self.__app.get_current_user())
+        chat.add_user(self.__app.get_current_user().id)
         if self.__dao.add(chat):
             self.__chat_list_display.show_message("Chat created")
         else:
@@ -169,10 +169,10 @@ class ChatsController(ControllersAbstract):
         if chat is None:  # improbable error (should never happen)
             self.__chat_list_display.show_error("Chat not found")
             return
-        if chat.user_in_chat(self.__app.get_current_user()):
+        if chat.user_in_chat(self.__app.get_current_user().id):
             self.__chat_list_display.show_message("You are already in this chat")
             return
-        chat.add_user(self.__app.get_current_user())
+        chat.add_user(self.__app.get_current_user().id)
         self.__chat_list_display.show_message("Chat joined")
 
     #   We need to validate path, because as we aren't dealing
@@ -187,7 +187,7 @@ class ChatsController(ControllersAbstract):
         user = self.__app.get_current_user()
         if not isinstance(user, User):
             raise TypeError(f"Expected User, got {type(user)}")
-        if not self.__current_chat.user_in_chat(user):
+        if not self.__current_chat.user_in_chat(user.id):
             raise Exception("User not found")
         content = self.__chat_messages_display.get_input_text()
         retval = self.__current_chat.chat_history.add_text_message(content, user)
@@ -201,7 +201,7 @@ class ChatsController(ControllersAbstract):
         user = self.__app.get_current_user()
         if not isinstance(user, User):
             raise TypeError(f"Expected User, got {type(user)}")
-        if not self.__current_chat.user_in_chat(user):
+        if not self.__current_chat.user_in_chat(user.id):
             raise Exception("User not found")
         path = self.__chat_messages_display.get_input_image()
         if not self.validate_path(path):
@@ -225,7 +225,7 @@ class ChatsController(ControllersAbstract):
         user = self.__app.get_current_user()
         if not isinstance(user, User):
             raise TypeError(f"Expected User, got {type(user)}")
-        if not self.__current_chat.user_in_chat(user):
+        if not self.__current_chat.user_in_chat(user.id):
             raise Exception("User not found")
         path = self.__chat_messages_display.get_input_image()
         if not self.validate_path(path):
@@ -290,8 +290,8 @@ class ChatsController(ControllersAbstract):
         curr_user = self.__app.get_current_user()
         chat = self.__current_chat
         #   Removing not creator user from chat
-        if chat.creator_user != curr_user:
-            chat.remove_user(curr_user)
+        if chat.creator_user_id != curr_user.id:
+            chat.remove_user(curr_user.id)
             self.__chat_messages_display.show_message("User removed from chat")
         #   When there is no user on a chat, it's removed from
         #   The chat list
@@ -311,8 +311,8 @@ class ChatsController(ControllersAbstract):
         #   When you're a creator user you must change the current
         #   "ADM" user, then you might exit chat
         else:
-            chat.change_creator_user()
-            chat.remove_user(curr_user)
+            chat.change_creator_user_id()
+            chat.remove_user(curr_user.id)
             self.__chat_messages_display.show_message("User removed from chat")
         self.__current_chat = None
         self.__dao.update(self.__current_chat)

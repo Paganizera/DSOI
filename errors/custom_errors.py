@@ -12,6 +12,12 @@ class InvalidOptionError(Exception):
     def __init__(self) -> None:
         super().__init__("The selected option is not a valid one")
 
+
 class ClosedProgramWindowError(Exception):
     def __init__(self) -> None:
         super().__init__("The window was closed")
+
+
+class UserNotFoundError(Exception):
+    def __init__(self) -> None:
+        super().__init__("The user wasn't found")

@@ -34,7 +34,7 @@ class User:
         return self.__id
 
     @staticmethod
-    def hash256(pw):
+    def hash256(pw: str) -> str:
         return hashlib.sha256(pw.encode()).hexdigest()
 
     #   Avaliates duplicated users
