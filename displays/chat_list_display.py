@@ -17,7 +17,7 @@ class ChatListDisplay(DisplayAbstract):
             [sg.Radio("Your Chats", "RADIO1", default=True, size=(10, 1), font=data.FONT, key="-YOURCHATS-")],
             [sg.Radio("Browse Chats", "RADIO1", default=True, size=(12, 1), font=data.FONT, key="-BROWSECHATS-")],
             [sg.Radio("Exit", "RADIO1", default=True, size=(10, 1), font=data.FONT, key="-EXIT-")],
-            [sg.Button("Ok", size=(10, 1), font=data.FONT)]
+            [sg.Column([[sg.Button("Ok", size=(10, 1), font=data.FONT)]], justification='center')],
         ]
         self.__window = sg.Window("Users Menu", layout, size=(data.HEIGHT, data.WIDTH), finalize=True)
 
@@ -50,7 +50,8 @@ class ChatListDisplay(DisplayAbstract):
         lst = sg.Listbox(chat_names, size=(20, 4), font=('Arial Bold', 14), auto_size_text=True, enable_events=True, expand_x=True, select_mode=sg.LISTBOX_SELECT_MODE_BROWSE,  key='-LIST-')
         layout = [
             [lst],
-            [sg.Button("Cancel", size=(10, 1), font=data.FONT),sg.Button("Submit", size=(10, 1), font=data.FONT)],
+            [sg.Column([[sg.Button("Submit", size=(10, 1), font=data.FONT)]], justification='center')],
+            [sg.Column([[sg.Button("Cancel", size=(10, 1), font=data.FONT)]], justification='center')],
         ]
         self.__window = sg.Window("ChatList", layout, size=(data.HEIGHT, data.WIDTH), finalize=True)
         while True:
@@ -78,7 +79,8 @@ class ChatListDisplay(DisplayAbstract):
         lst = sg.Listbox(chat_names, size=(20, 4), font=('Arial Bold', 14), auto_size_text=True, enable_events=True, expand_x=True, select_mode=sg.LISTBOX_SELECT_MODE_BROWSE ,key='-LIST-')
         layout = [
             [lst],
-            [sg.Button("Cancel", size=(10, 1), font=data.FONT), sg.Button("Open", size=(10, 1), font=data.FONT)]
+            [sg.Column([[sg.Button("Cancel", size=(10, 1), font=data.FONT)]], justification='center')],
+            [sg.Column([[sg.Button("Open", size=(10, 1), font=data.FONT)]], justification='center')],
         ]
         self.__window = sg.Window("ChatList", layout, size=(data.HEIGHT, data.WIDTH), finalize=True)
         tmp = None
@@ -106,7 +108,8 @@ class ChatListDisplay(DisplayAbstract):
         lst = sg.Listbox(chat_names, size=(20, 4), font=('Arial Bold', 14), auto_size_text=True, enable_events=True, expand_x=True, select_mode=sg.LISTBOX_SELECT_MODE_BROWSE ,key='-LIST-')
         layout = [
             [lst],
-            [sg.Button("Exit", size=(10, 1), font=data.FONT), sg.Button("Info", size=(10, 1), font=data.FONT)]
+            [sg.Column([[sg.Button("Info", size=(10, 1), font=data.FONT)]], justification='center')],
+            [sg.Column([[sg.Button("Exit", size=(10, 1), font=data.FONT)]], justification='center')],
         ]
         self.__window = sg.Window("ChatList", layout, size=(data.HEIGHT, data.WIDTH), finalize=True)
         tmp = None
@@ -130,7 +133,8 @@ class ChatListDisplay(DisplayAbstract):
     def get_new_chat_name(self) -> str:
         layout = [
             [sg.Text("New Chat Name:", size=(15, 1), font=data.FONT), sg.InputText(key="-CHATNAME-", font=data.FONT)],
-            [sg.Button("Cancel", size=(10, 1), font=data.FONT), sg.Button("Submit", size=(10, 1), font=data.FONT)]
+            [sg.Column([[sg.Button("Submit", size=(10, 1), font=data.FONT)]], justification='center')],
+            [sg.Column([[sg.Button("Cancel", size=(10, 1), font=data.FONT)]], justification='center')],
         ]
         self.__window = sg.Window("Creating Chat", layout, size=(data.HEIGHT, data.WIDTH), finalize=True)
         while True:

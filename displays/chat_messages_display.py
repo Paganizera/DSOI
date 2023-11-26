@@ -1,15 +1,11 @@
 from .display_abstract import DisplayAbstract
 from errors.custom_errors import InvalidOptionError, ClosedProgramWindowError
-from history.image_message import ImageMessage
-from history.video_message import VideoMessage
-from history.text_message import TextMessage
 import PySimpleGUI as sg
 from . import data
 
 class ChatMessagesDisplay(DisplayAbstract):
     def __main__(self) -> None:
         super().__init__()
-
 
     #   Shows available options
     def init_components(self, messages: []) -> None:
@@ -19,10 +15,9 @@ class ChatMessagesDisplay(DisplayAbstract):
             [lst],
             [sg.Radio("Send Message", "RADIO1", default=True, size=(12, 1), font=data.FONT, key="-TXTMSG-")],
             [sg.Radio("Send Image", "RADIO1", default=True, size=(10, 1), font=data.FONT, key="-IMGMSG-")],
-            [sg.Radio("Send Video", "RADIO1", default=True, size=(10, 1), font=data.FONT, key="-VDOMSG-")],
             [sg.Radio("Remove User", "RADIO1", default=True, size=(11, 1), font=data.FONT, key="-RMUSER-")],
             [sg.Radio("Exit Chat", "RADIO1", default=True, size=(10, 1), font=data.FONT, key="-EXIT-")],
-            [sg.Button("Ok", size=(10, 1), font=data.FONT)]
+            [sg.Button("Select", size=(10, 1), font=data.FONT), sg.Button("View", size=(10, 1), font=data.FONT), sg.Button("Close", size=(10, 1), font=data.FONT)],
         ]
         self.__window = sg.Window("Users Menu", layout, size=(data.HEIGHT, data.WIDTH), finalize=True)
 
@@ -31,18 +26,22 @@ class ChatMessagesDisplay(DisplayAbstract):
         self.init_components(messages)
         while True:
             event, values = self.__window.read()
-            if event == "Ok":
+            if event == "Select":
                 if values["-TXTMSG-"]:
                     retval = 'textmessage'
                 elif values["-IMGMSG-"]:
                     retval = 'imagemessage'
-                elif values["-VDOMSG-"]:
-                    retval = 'videomessage'
                 elif values["-RMUSER-"]:
                     retval = 'removeuser'
                 elif values["-EXIT-"]:
                     retval = 'exit'
                 break
+            elif event == 'Select':
+                retval = 'openmessage'
+            elif event == 'View':
+                pass
+            elif event == 'Close':
+                retval = 'close'
             elif event == sg.WIN_CLOSED:
                 raise ClosedProgramWindowError()
         self.__window.close()

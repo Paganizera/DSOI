@@ -1,7 +1,6 @@
 from history.base_message import BaseMessage
 from .text_message import TextMessage
 from .image_message import ImageMessage
-from .video_message import VideoMessage
 from entities.user import User
 
 class ChatHistory:
@@ -26,13 +25,6 @@ class ChatHistory:
     def add_image_message(self, path: str, filename: str, user: User) -> bool:
         if isinstance(path, str) and isinstance(user, User):
             msg = ImageMessage(path, filename, user)
-            self.__messages.append(msg)
-            return True
-        return False
-
-    def add_video_message(self, path: str, filename: str, user: User) -> bool:
-        if isinstance(path, str) and isinstance(user, User):
-            msg = VideoMessage(path, filename, user)
             self.__messages.append(msg)
             return True
         return False

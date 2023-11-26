@@ -44,7 +44,7 @@ class UsersDisplay(DisplayAbstract):
             [sg.Radio("Show user data", "RADIO1", default=True, size=(20, 1), font=data.FONT, key="-SHOW-")],
             [sg.Radio("Delete user", "RADIO1", default=True, size=(20, 1), font=data.FONT, key="-DELETE-")],
             [sg.Radio("Go to main menu", "RADIO1", default=True, size=(20, 1), font=data.FONT, key="-EXIT-")],
-            [sg.Button("Ok", size=(10, 1), font=data.FONT)]
+            [sg.Column([[sg.Button("Ok", size=(10, 1), font=data.FONT)]], justification='center')],
         ]
         self.__window = sg.Window("Logged Users Menu", layout, size=(data.HEIGHT, data.WIDTH), finalize=True)
 
@@ -74,9 +74,10 @@ class UsersDisplay(DisplayAbstract):
     #   them as a tuple
     def get_data(self) -> tuple[str, str]:
         layout = [
+            [sg.Text("Input Data", size=(50, 1), justification="center", font=data.FONT_TITLE, relief=sg.RELIEF_RIDGE)],           
             [sg.Text("Nickname:", size=(15, 1), font=data.FONT), sg.InputText(key="-NICKNAME-", font=data.FONT)],
             [sg.Text("Password:", size=(15, 1), font=data.FONT), sg.InputText(key="-PASSWORD-", font=data.FONT, password_char="*")],
-            [sg.Button("Ok", size=(10, 1), font=data.FONT)]
+            [sg.Column([[sg.Button("Ok", size=(10, 1), font=data.FONT)]], justification='center')],
         ]
         self.__window = sg.Window("Get User Data", layout, size=(data.HEIGHT, data.WIDTH), finalize=True)
         while True:
@@ -93,8 +94,9 @@ class UsersDisplay(DisplayAbstract):
     #   Returns current password
     def get_current_password(self) -> str:
         layout = [
+            [sg.Text("Input Password", size=(50, 1), justification="center", font=data.FONT_TITLE, relief=sg.RELIEF_RIDGE)],           
             [sg.Text("Password:", size=(15, 1), font=data.FONT), sg.InputText(key="-PASSWORD-", font=data.FONT, password_char="*")],
-            [sg.Button("Ok", size=(10, 1), font=data.FONT)]
+            [sg.Column([[sg.Button("Ok", size=(10, 1), font=data.FONT)]], justification='center')],
         ]
         self.__window = sg.Window("Get Current Password", layout, size=(data.HEIGHT, data.WIDTH), finalize=True)
         while True:
@@ -113,7 +115,7 @@ class UsersDisplay(DisplayAbstract):
         layout = [
             [sg.Text(f"Nickname: {nickname}", size=(50, 1), justification="center", font=data.FONT)],
             [sg.Text(f"Id: {id}", size=(50, 1), justification="center", font=data.FONT)],
-            [sg.Button("Ok", size=(10, 1), font=data.FONT)]
+            [sg.Column([[sg.Button("Ok", size=(10, 1), font=data.FONT)]], justification='center')],
         ]
         self.__window = sg.Window("User Data", layout, size=(data.HEIGHT, data.WIDTH), finalize=True)
         while True:

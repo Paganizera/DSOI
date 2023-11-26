@@ -12,7 +12,7 @@ class MainDisplay(DisplayAbstract):
             [sg.Radio("Users", "RADIO1", default=True, size=(10, 1), font=data.FONT, key="-USERS-")],
             [sg.Radio("Chats", "RADIO1", default=True, size=(10, 1), font=data.FONT, key="-CHATS-")],
             [sg.Radio("Exit", "RADIO1", default=True, size=(10, 1), font=data.FONT, key="-EXIT-")],
-            [sg.Button("Ok", size=(10, 1), font=data.FONT)]
+            [sg.Column([[sg.Button("Ok", size=(10, 1), font=data.FONT)]], justification='center')],
         ]
         window = sg.Window("Main Menu", layout, size=(data.HEIGHT, data.WIDTH), finalize=True)
         while True:

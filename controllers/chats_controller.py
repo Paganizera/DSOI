@@ -8,7 +8,6 @@ from displays.chat_list_display import ChatListDisplay
 from displays.chat_messages_display import ChatMessagesDisplay
 from errors.custom_errors import InvalidOptionError, ClosedProgramWindowError
 from history.text_message import TextMessage
-from history.video_message import VideoMessage
 from history.image_message import ImageMessage
 from daos.chat_dao import ChatDAO
 
@@ -63,7 +62,6 @@ class ChatsController(ControllersAbstract):
         }
         chat_options = {
             "textmessage": self.send_text_message,
-            "videomessage": self.send_video_message,
             "imagemessage": self.send_image_message,
             "close": self.close_chat,
             "removeuser": self.remove_user_from_chat,
@@ -87,9 +85,9 @@ class ChatsController(ControllersAbstract):
             else:
                 #   Selection pannel for an active chat
                 try:
-                    messages = self.get_messages(self.__current_chat)
+                    messages, paths = self.get_messages(self.__current_chat)
                     option = self.__chat_messages_display.show_options(
-                        messages
+                        messages, paths
                     )
                 except InvalidOptionError as e:
                     self.__chat_messages_display.show_error(str(e))
@@ -194,32 +192,7 @@ class ChatsController(ControllersAbstract):
         if not retval:
             self.__chat_messages_display.show_error("Couldn't send message")
 
-    #   Instead of getting a txt message, we must get
-    #   A file's path so we can use it later when
-    #   GUI is meant
-    def send_video_message(self) -> None:
-        user = self.__app.get_current_user()
-        if not isinstance(user, User):
-            raise TypeError(f"Expected User, got {type(user)}")
-        if not self.__current_chat.user_in_chat(user.id):
-            raise Exception("User not found")
-        path = self.__chat_messages_display.get_input_image()
-        if not self.validate_path(path):
-            self.__chat_messages_display.show_message("No file found")
-        else:
-            #   If the message is valid, we create a new VideoMessage
-            #   And add it to the Chat's history
-            chatdir = str(Path(__file__).parent.parent)+'/data/'+self.current_chat.name+'/'
-            filename = path.split('/')
-            if not os.path.isdir(chatdir):
-                os.mkdir(chatdir)
-            filedir = chatdir+ str(filename[-1])
-            shutil.copyfile(path, filedir)
-            retval = self.__current_chat.chat_history.add_video_message(filedir,filename[-1], user)
-            if not retval:
-                self.__chat_messages_display.show_error("Couldn't send message")
 
-    #   This function is almost the same as send_video_message
     #   But we change the precreated path to the images folder
     def send_image_message(self) -> None:
         user = self.__app.get_current_user()
@@ -231,7 +204,6 @@ class ChatsController(ControllersAbstract):
         if not self.validate_path(path):
             self.__chat_messages_display.show_message("No file found")
         else:
-            #   If the message is valid, we create a new VideoMessage
             #   And add it to the Chat's history
             chatdir = str(Path(__file__).parent.parent)+'/data/'+self.current_chat.name+'/'
             filename = path.split('/')
@@ -320,12 +292,13 @@ class ChatsController(ControllersAbstract):
 
 
     #   Shows all messages from the current chat's ChatHistory
-    def get_messages(self, chat: Chat) -> None:
+    def get_messages(self, chat: Chat):
         messages = chat.chat_history.messages
         #   Different prints wheter the user who sent
         #   Still has an account or has no more
         #   And also analyzes the messagetype
         msg_list = []
+        paths = []
         for message in messages:
             if message.user == None:
                 nickname = "Deleted User"
@@ -337,8 +310,9 @@ class ChatsController(ControllersAbstract):
             #   Text message print
             if isinstance(message, TextMessage):
                 msg_list.append(str(f"{prefix} {message.text}"))
-            #   Video message print
-            elif isinstance(message, (VideoMessage, ImageMessage)):
+            elif isinstance(message, ImageMessage):
                 msg_list.append(str(f"{prefix} {message.filename}"))
+            if isinstance(message, ImageMessage):
+                paths.append(message.path)
 
-        return msg_list
+        return msg_list, paths
