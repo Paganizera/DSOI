@@ -63,9 +63,8 @@ class ChatsController(ControllersAbstract):
         chat_options = {
             "textmessage": self.send_text_message,
             "imagemessage": self.send_image_message,
-            "close": self.close_chat,
             "removeuser": self.remove_user_from_chat,
-            'exit': self.exit,
+            "close": self.close_chat,
         }
         #   While True makes the code to keep running
         #   For the purpouse of making avaiable to
@@ -92,6 +91,9 @@ class ChatsController(ControllersAbstract):
                 except InvalidOptionError as e:
                     self.__chat_messages_display.show_error(str(e))
                 else:
+                    if option == "exit":
+                        self.__current_chat = None
+                        continue
                     chat_options[option]()
     #   Return screen
     def exit(self) -> None:
@@ -100,6 +102,8 @@ class ChatsController(ControllersAbstract):
     #   Add a chat by setting a chatname
     def add_chat(self) -> None:
         name = self.__chat_list_display.get_new_chat_name()
+        if name == "":
+            return
         try:
             #   Instantiates a new chat
             chat = Chat(name, self.__app.get_current_user().id)
@@ -191,6 +195,8 @@ class ChatsController(ControllersAbstract):
         retval = self.__current_chat.chat_history.add_text_message(content, user)
         if not retval:
             self.__chat_messages_display.show_error("Couldn't send message")
+        else:
+            self.__dao.update(self.__current_chat)
 
 
     #   But we change the precreated path to the images folder
@@ -201,6 +207,8 @@ class ChatsController(ControllersAbstract):
         if not self.__current_chat.user_in_chat(user.id):
             raise Exception("User not found")
         path = self.__chat_messages_display.get_input_image()
+        if path is None:
+            return
         if not self.validate_path(path):
             self.__chat_messages_display.show_message("No file found")
         else:
@@ -214,6 +222,8 @@ class ChatsController(ControllersAbstract):
             retval = self.__current_chat.chat_history.add_image_message(filedir,filename[-1], user)
             if not retval:
                 self.__chat_messages_display.show_error("Couldn't send message")
+            else:
+                self.__dao.update(self.__current_chat)
 
     #   This function is responsable for updating the messages
     #   When an user isn't found anymore

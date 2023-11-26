@@ -1,5 +1,5 @@
 from .display_abstract import DisplayAbstract
-from errors.custom_errors import InvalidOptionError, ClosedProgramWindowError
+from errors.custom_errors import ClosedProgramWindowError
 import PySimpleGUI as sg
 from . import data
 from PIL import Image
@@ -10,20 +10,19 @@ class ChatMessagesDisplay(DisplayAbstract):
 
     #   Shows available options
     def init_components(self, messages: []) -> None:
-        lst = sg.Listbox(messages, size=(20, 4), font=('Arial Bold', 14), auto_size_text=True, enable_events=True, expand_x=True, select_mode=sg.LISTBOX_SELECT_MODE_BROWSE ,key='-LIST-')
+        lst = sg.Listbox(messages, size=(20, 4), font=('Arial Bold', 14), auto_size_text=True, enable_events=True, expand_x=True, expand_y=True, select_mode=sg.LISTBOX_SELECT_MODE_BROWSE ,key='-LIST-')
         layout = [
-            [sg.Text("Chat Screen", size=(50, 1), justification="center", font=data.FONT_TITLE, relief=sg.RELIEF_RIDGE)],
+            [sg.Text("Chat Screen", size=(50, 1), justification="center", font=data.FONT_TITLE, relief=sg.RELIEF_RIDGE, auto_size_text=True)],
             [lst],
             [sg.Radio("Send Message", "RADIO1", default=True, size=(12, 1), font=data.FONT, key="-TXTMSG-")],
             [sg.Radio("Send Image", "RADIO1", default=True, size=(10, 1), font=data.FONT, key="-IMGMSG-")],
             [sg.Radio("Remove User", "RADIO1", default=True, size=(11, 1), font=data.FONT, key="-RMUSER-")],
-            [sg.Radio("Exit Chat", "RADIO1", default=True, size=(10, 1), font=data.FONT, key="-EXIT-")],
             [sg.Button("Select", size=(10, 1), font=data.FONT), sg.Button("View", size=(10, 1), font=data.FONT), sg.Button("Close", size=(10, 1), font=data.FONT)],
         ]
         self.__window = sg.Window("Users Menu", layout, size=(data.HEIGHT, data.WIDTH), finalize=True)
 
 
-    def show_options(self, messages: [], paths: []) -> str:
+    def show_options(self, messages: list[str], paths: list[str]) -> str:
         self.init_components(messages)
         while True:
             event, values = self.__window.read()
@@ -34,12 +33,15 @@ class ChatMessagesDisplay(DisplayAbstract):
                     retval = 'imagemessage'
                 elif values["-RMUSER-"]:
                     retval = 'removeuser'
-                elif values["-EXIT-"]:
-                    retval = 'exit'
+                else:
+                    continue
                 break
             elif event == 'Select':
                 retval = 'openmessage'
             elif event == 'View':
+                if values["-LIST-"] == []:
+                    super().show_message("Select a message")
+                    continue
                 msg = values['-LIST-'][-1]
                 image = msg.split(" ")
                 for path in paths:
@@ -51,6 +53,7 @@ class ChatMessagesDisplay(DisplayAbstract):
                     super().show_message(values['-LIST-'])
             elif event == 'Close':
                 retval = 'close'
+                break
             elif event == sg.WIN_CLOSED:
                 raise ClosedProgramWindowError()
         self.__window.close()
@@ -59,19 +62,19 @@ class ChatMessagesDisplay(DisplayAbstract):
 
     #   Get the text content to send
     def get_input_text(self) -> str:
-        message = sg.popup_get_text('Enter the message', title="Message Input")        
+        message = sg.popup_get_text('Enter the message', title="Message Input", font=data.FONT)        
         message = message.strip()
         self.__window.close()
         return message
 
     # Get the media's name that the user wants to send
-    def get_input_image(self) -> str:
+    def get_input_image(self) -> str | None:
         layout = [
             [sg.Text('Enter a filename:')],
-            [sg.Input(sg.user_settings_get_entry('-filename-', ''), key='-IN-'), sg.FileBrowse(file_types=(("PNG Files", "*.png"),))],
-            [sg.B('Save'), sg.B('Exit Without Saving', key='Exit')]
+            [sg.Input(sg.user_settings_get_entry('-filename-', ''), key='-IN-')],
+            [sg.FileBrowse(file_types=(("PNG Files", "*.png"),)), sg.B('Save'), sg.B('Exit Without Saving', key='Exit')]
             ]
-        self.__window = sg.Window("Users Menu", layout, size=(data.HEIGHT, data.WIDTH), finalize=True)
+        self.__window = sg.Window("Users Menu", layout, size=(data.HEIGHT, data.WIDTH), font=data.FONT, finalize=True)
         event, values = self.__window.read()
         while True:
             event, values = self.__window.read()

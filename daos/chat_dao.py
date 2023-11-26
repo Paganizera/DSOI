@@ -24,7 +24,7 @@ class ChatDAO(DAO):
             return super().get(key)
         return None
 
-    def remove(selfself, key: UUID) -> bool:
+    def remove(self, key: UUID) -> bool:
         if isinstance(key, UUID):
             return super().remove(key)
         return False
