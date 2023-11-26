@@ -2,6 +2,7 @@ from .display_abstract import DisplayAbstract
 from errors.custom_errors import InvalidOptionError, ClosedProgramWindowError
 import PySimpleGUI as sg
 from . import data
+from PIL import Image
 
 class ChatMessagesDisplay(DisplayAbstract):
     def __main__(self) -> None:
@@ -22,7 +23,7 @@ class ChatMessagesDisplay(DisplayAbstract):
         self.__window = sg.Window("Users Menu", layout, size=(data.HEIGHT, data.WIDTH), finalize=True)
 
 
-    def show_options(self, messages: []) -> str:
+    def show_options(self, messages: [], paths: []) -> str:
         self.init_components(messages)
         while True:
             event, values = self.__window.read()
@@ -39,7 +40,15 @@ class ChatMessagesDisplay(DisplayAbstract):
             elif event == 'Select':
                 retval = 'openmessage'
             elif event == 'View':
-                pass
+                msg = values['-LIST-'][-1]
+                image = msg.split(" ")
+                for path in paths:
+                    filename = path.split('/')
+                    if image[-1] == filename[-1]:
+                        Image.open(path).show()
+                        break
+                else:
+                    super().show_message(values['-LIST-'])
             elif event == 'Close':
                 retval = 'close'
             elif event == sg.WIN_CLOSED:
@@ -59,9 +68,7 @@ class ChatMessagesDisplay(DisplayAbstract):
     def get_input_image(self) -> str:
         layout = [
             [sg.Text('Enter a filename:')],
-            [sg.Input(sg.user_settings_get_entry('-filename-', ''), key='-IN-'), sg.FileBrowse(file_types=(
-                ("PNG Files", "*.png"),("JPG Files", "*.jpg"), ("GIF Files", "*.gif")
-                ))],
+            [sg.Input(sg.user_settings_get_entry('-filename-', ''), key='-IN-'), sg.FileBrowse(file_types=(("PNG Files", "*.png"),))],
             [sg.B('Save'), sg.B('Exit Without Saving', key='Exit')]
             ]
         self.__window = sg.Window("Users Menu", layout, size=(data.HEIGHT, data.WIDTH), finalize=True)
@@ -78,27 +85,3 @@ class ChatMessagesDisplay(DisplayAbstract):
                 raise ClosedProgramWindowError()
         self.__window.close()
         return retval
-
-    def get_input_video(self) -> str:
-            layout = [
-                [sg.Text('Enter a filename:')],
-                [sg.Input(sg.user_settings_get_entry('-filename-', ''), key='-IN-'), sg.FileBrowse(file_types=(
-                   ("MP4 Files", "*.mp4"),("M4V Files", "*.m4v"), ("MKV Files", "*.mkv")
-                    ))],
-                [sg.B('Save'), sg.B('Exit Without Saving', key='Exit')]
-                ]
-            self.__window = sg.Window("Users Menu", layout, size=(data.HEIGHT, data.WIDTH), finalize=True)
-            event, values = self.__window.read()
-            while True:
-                event, values = self.__window.read()
-                if event == "Save":
-                    retval = str(values["-IN-"])
-                    break
-                elif event == "Exit Without Saving":
-                    retval = None
-                    break
-                elif event == sg.WIN_CLOSED:
-                    raise ClosedProgramWindowError()
-            self.__window.close()
-            return retval
-        
