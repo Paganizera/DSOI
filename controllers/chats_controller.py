@@ -85,9 +85,7 @@ class ChatsController(ControllersAbstract):
                 #   Selection pannel for an active chat
                 try:
                     messages, paths = self.get_messages(self.__current_chat)
-                    option = self.__chat_messages_display.show_options(
-                        messages, paths
-                    )
+                    option = self.__chat_messages_display.show_options(messages, paths)
                 except InvalidOptionError as e:
                     self.__chat_messages_display.show_error(str(e))
                 else:
@@ -95,6 +93,7 @@ class ChatsController(ControllersAbstract):
                         self.__current_chat = None
                         continue
                     chat_options[option]()
+
     #   Return screen
     def exit(self) -> None:
         self.__app.open_screen()
@@ -117,7 +116,7 @@ class ChatsController(ControllersAbstract):
             return
         #   Auto add the current user to the new chat
         #   And then append it to the chat list
-        chatdir = str(Path(__file__).parent.parent)+'/data/'+name
+        chatdir = str(Path(__file__).parent.parent) + "/data/" + name
         if not os.path.isdir(chatdir):
             os.mkdir(chatdir)
         chat.add_user(self.__app.get_current_user().id)
@@ -182,7 +181,6 @@ class ChatsController(ControllersAbstract):
     def validate_path(self, path: str) -> bool:
         return os.path.isfile(path)
 
-
     #   We get a message and then add it to the current
     #   Chat's history
     def send_text_message(self) -> None:
@@ -198,7 +196,6 @@ class ChatsController(ControllersAbstract):
         else:
             self.__dao.update(self.__current_chat)
 
-
     #   But we change the precreated path to the images folder
     def send_image_message(self) -> None:
         user = self.__app.get_current_user()
@@ -213,13 +210,20 @@ class ChatsController(ControllersAbstract):
             self.__chat_messages_display.show_message("No file found")
         else:
             #   And add it to the Chat's history
-            chatdir = str(Path(__file__).parent.parent)+'/data/'+self.current_chat.name+'/'
-            filename = path.split('/')
+            chatdir = (
+                str(Path(__file__).parent.parent)
+                + "/data/"
+                + self.current_chat.name
+                + "/"
+            )
+            filename = path.split("/")
             if not os.path.isdir(chatdir):
                 os.mkdir(chatdir)
-            filedir = chatdir+ str(filename[-1])
+            filedir = chatdir + str(filename[-1])
             shutil.copyfile(path, filedir)
-            retval = self.__current_chat.chat_history.add_image_message(filedir,filename[-1], user)
+            retval = self.__current_chat.chat_history.add_image_message(
+                filedir, filename[-1], user
+            )
             if not retval:
                 self.__chat_messages_display.show_error("Couldn't send message")
             else:
@@ -248,7 +252,6 @@ class ChatsController(ControllersAbstract):
         #   Finally we make the current messages from the
         #   ChatHistory class the updated ones
         self.__current_chat.chat_history.messages = chat_messages
-
 
     #   This function is responsable for displaying
     #   All the messages from a chat
@@ -283,7 +286,12 @@ class ChatsController(ControllersAbstract):
             ):
                 if self.__dao.remove(chat.id):
                     self.__chat_messages_display.show_message("Chat removed")
-                    path = str(Path(__file__).parent.parent)+'/data/'+self.__current_chat.name+'/'
+                    path = (
+                        str(Path(__file__).parent.parent)
+                        + "/data/"
+                        + self.__current_chat.name
+                        + "/"
+                    )
                     shutil.rmtree(path)
                 else:
                     self.__chat_messages_display.show_error("Chat could not be removed")
@@ -298,8 +306,6 @@ class ChatsController(ControllersAbstract):
             self.__chat_messages_display.show_message("User removed from chat")
         self.__current_chat = None
         self.__dao.update(self.__current_chat)
-
-
 
     #   Shows all messages from the current chat's ChatHistory
     def get_messages(self, chat: Chat):

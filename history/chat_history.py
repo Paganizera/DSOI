@@ -3,6 +3,7 @@ from .text_message import TextMessage
 from .image_message import ImageMessage
 from entities.user import User
 
+
 class ChatHistory:
     def __init__(self):
         self.__messages: list[BaseMessage] = []
@@ -21,7 +22,7 @@ class ChatHistory:
             self.__messages.append(msg)
             return True
         return False
-    
+
     def add_image_message(self, path: str, filename: str, user: User) -> bool:
         if isinstance(path, str) and isinstance(user, User):
             msg = ImageMessage(path, filename, user)

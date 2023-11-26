@@ -3,6 +3,8 @@ from entities.chat import Chat
 import PySimpleGUI as sg
 from . import data
 from errors.custom_errors import ClosedProgramWindowError
+
+
 class ChatListDisplay(DisplayAbstract):
     def __main__(self) -> None:
         super().__init__()
@@ -10,16 +12,75 @@ class ChatListDisplay(DisplayAbstract):
     #   Shows available options
     def init_components(self) -> None:
         layout = [
-            [sg.Text("ChatList", size=(50, 1), justification="center", font=data.FONT_TITLE, relief=sg.RELIEF_RIDGE)],
-            [sg.Radio("Add Chat", "RADIO1", default=True, size=(10, 1), font=data.FONT, key="-ADDCHAT-")],
-            [sg.Radio("Open Chat", "RADIO1", default=True, size=(10, 1), font=data.FONT, key="-OPENCHAT-")],
-            [sg.Radio("Your Chats", "RADIO1", default=True, size=(10, 1), font=data.FONT, key="-YOURCHATS-")],
-            [sg.Radio("Browse Chats", "RADIO1", default=True, size=(12, 1), font=data.FONT, key="-BROWSECHATS-")],
-            [sg.Radio("Exit", "RADIO1", default=True, size=(10, 1), font=data.FONT, key="-EXIT-")],
-            [sg.Column([[sg.Button("Ok", size=(10, 1), font=data.FONT)]], justification='center')],
+            [
+                sg.Text(
+                    "ChatList",
+                    size=(50, 1),
+                    justification="center",
+                    font=data.FONT_TITLE,
+                    relief=sg.RELIEF_RIDGE,
+                )
+            ],
+            [
+                sg.Radio(
+                    "Add Chat",
+                    "RADIO1",
+                    default=True,
+                    size=(10, 1),
+                    font=data.FONT,
+                    key="-ADDCHAT-",
+                )
+            ],
+            [
+                sg.Radio(
+                    "Open Chat",
+                    "RADIO1",
+                    default=True,
+                    size=(10, 1),
+                    font=data.FONT,
+                    key="-OPENCHAT-",
+                )
+            ],
+            [
+                sg.Radio(
+                    "Your Chats",
+                    "RADIO1",
+                    default=True,
+                    size=(10, 1),
+                    font=data.FONT,
+                    key="-YOURCHATS-",
+                )
+            ],
+            [
+                sg.Radio(
+                    "Browse Chats",
+                    "RADIO1",
+                    default=True,
+                    size=(12, 1),
+                    font=data.FONT,
+                    key="-BROWSECHATS-",
+                )
+            ],
+            [
+                sg.Radio(
+                    "Exit",
+                    "RADIO1",
+                    default=True,
+                    size=(10, 1),
+                    font=data.FONT,
+                    key="-EXIT-",
+                )
+            ],
+            [
+                sg.Column(
+                    [[sg.Button("Ok", size=(10, 1), font=data.FONT)]],
+                    justification="center",
+                )
+            ],
         ]
-        self.__window = sg.Window("Users Menu", layout, size=(data.HEIGHT, data.WIDTH), finalize=True)
-
+        self.__window = sg.Window(
+            "Users Menu", layout, size=(data.HEIGHT, data.WIDTH), finalize=True
+        )
 
     def show_options(self) -> str:
         self.init_components()
@@ -27,32 +88,54 @@ class ChatListDisplay(DisplayAbstract):
             event, values = self.__window.read()
             if event == "Ok":
                 if values["-ADDCHAT-"]:
-                    retval = 'addchat'
+                    retval = "addchat"
                 elif values["-OPENCHAT-"]:
-                    retval = 'openchat'
+                    retval = "openchat"
                 elif values["-YOURCHATS-"]:
-                    retval = 'yourchats'
+                    retval = "yourchats"
                 elif values["-BROWSECHATS-"]:
-                    retval = 'browsechats'
+                    retval = "browsechats"
                 elif values["-EXIT-"]:
-                    retval = 'exit'
+                    retval = "exit"
                 break
             elif event == sg.WIN_CLOSED:
                 raise ClosedProgramWindowError()
         self.__window.close()
-        #self.close()  # isn't working
+        # self.close()  # isn't working
         return retval
 
     #   Shows all chats options and then returns the choosen one
     def get_chat_index(self, chats: list[Chat]) -> int:
         chat_names = [x.name for x in chats]
-        lst = sg.Listbox(chat_names, size=(20, 4), font=('Arial Bold', 14), auto_size_text=True, enable_events=True, expand_x=True, expand_y=True, select_mode=sg.LISTBOX_SELECT_MODE_BROWSE,  key='-LIST-')
+        lst = sg.Listbox(
+            chat_names,
+            size=(20, 4),
+            font=("Arial Bold", 14),
+            auto_size_text=True,
+            enable_events=True,
+            expand_x=True,
+            expand_y=True,
+            select_mode=sg.LISTBOX_SELECT_MODE_BROWSE,
+            key="-LIST-",
+        )
         layout = [
             [lst],
-            [sg.Column([[sg.Button("Submit", size=(10, 1), font=data.FONT)]], justification='center')],
-            [sg.Column([[sg.Button("Cancel", size=(10, 1), font=data.FONT)]], justification='center')],
+            [
+                sg.Column(
+                    [[sg.Button("Submit", size=(10, 1), font=data.FONT)]],
+                    justification="center",
+                )
+            ],
+            [
+                sg.Column(
+                    [[sg.Button("Cancel", size=(10, 1), font=data.FONT)]],
+                    justification="center",
+                )
+            ],
         ]
-        self.__window = sg.Window("ChatList", layout, size=(data.HEIGHT, data.WIDTH), finalize=True)
+        self.__window = sg.Window(
+            "ChatList", layout, size=(data.HEIGHT, data.WIDTH), finalize=True
+        )
         retval = -1
         tmp = None
         while True:
@@ -65,9 +148,9 @@ class ChatListDisplay(DisplayAbstract):
                 if tmp is not None:
                     retval = tmp
                     break
-            if event == 'Cancel':
+            if event == "Cancel":
                 break
-            if event in (sg.WIN_CLOSED, 'Exit'):
+            if event in (sg.WIN_CLOSED, "Exit"):
                 break
         self.__window.close()
         return retval
@@ -76,13 +159,35 @@ class ChatListDisplay(DisplayAbstract):
     #   For it to choose a chat
     def get_user_chat_index(self, chats: list[Chat]) -> int:
         chat_names = [x.name for x in chats]
-        lst = sg.Listbox(chat_names, size=(20, 4), font=('Arial Bold', 14), auto_size_text=True, enable_events=True, expand_x=True, expand_y=True, select_mode=sg.LISTBOX_SELECT_MODE_BROWSE ,key='-LIST-')
+        lst = sg.Listbox(
+            chat_names,
+            size=(20, 4),
+            font=("Arial Bold", 14),
+            auto_size_text=True,
+            enable_events=True,
+            expand_x=True,
+            expand_y=True,
+            select_mode=sg.LISTBOX_SELECT_MODE_BROWSE,
+            key="-LIST-",
+        )
         layout = [
             [lst],
-            [sg.Column([[sg.Button("Open", size=(10, 1), font=data.FONT)]], justification='center')],
-            [sg.Column([[sg.Button("Cancel", size=(10, 1), font=data.FONT)]], justification='center')],
+            [
+                sg.Column(
+                    [[sg.Button("Open", size=(10, 1), font=data.FONT)]],
+                    justification="center",
+                )
+            ],
+            [
+                sg.Column(
+                    [[sg.Button("Cancel", size=(10, 1), font=data.FONT)]],
+                    justification="center",
+                )
+            ],
         ]
-        self.__window = sg.Window("ChatList", layout, size=(data.HEIGHT, data.WIDTH), finalize=True)
+        self.__window = sg.Window(
+            "ChatList", layout, size=(data.HEIGHT, data.WIDTH), finalize=True
+        )
         tmp = None
         retval = -1
         while True:
@@ -95,9 +200,9 @@ class ChatListDisplay(DisplayAbstract):
                 if tmp is not None:
                     retval = tmp
                     break
-            if event == 'Cancel':
+            if event == "Cancel":
                 break
-            if event in (sg.WIN_CLOSED, 'Exit'):
+            if event in (sg.WIN_CLOSED, "Exit"):
                 break
         self.__window.close()
         return retval
@@ -105,13 +210,35 @@ class ChatListDisplay(DisplayAbstract):
     #   Show all chats where the user is in
     def show_user_chats(self, chats: list[Chat]) -> None:
         chat_names = [x.name for x in chats]
-        lst = sg.Listbox(chat_names, size=(20, 4), font=('Arial Bold', 14), auto_size_text=True, enable_events=True, expand_x=True, expand_y=True, select_mode=sg.LISTBOX_SELECT_MODE_BROWSE ,key='-LIST-')
+        lst = sg.Listbox(
+            chat_names,
+            size=(20, 4),
+            font=("Arial Bold", 14),
+            auto_size_text=True,
+            enable_events=True,
+            expand_x=True,
+            expand_y=True,
+            select_mode=sg.LISTBOX_SELECT_MODE_BROWSE,
+            key="-LIST-",
+        )
         layout = [
             [lst],
-            [sg.Column([[sg.Button("Info", size=(10, 1), font=data.FONT)]], justification='center')],
-            [sg.Column([[sg.Button("Exit", size=(10, 1), font=data.FONT)]], justification='center')],
+            [
+                sg.Column(
+                    [[sg.Button("Info", size=(10, 1), font=data.FONT)]],
+                    justification="center",
+                )
+            ],
+            [
+                sg.Column(
+                    [[sg.Button("Exit", size=(10, 1), font=data.FONT)]],
+                    justification="center",
+                )
+            ],
         ]
-        self.__window = sg.Window("ChatList", layout, size=(data.HEIGHT, data.WIDTH), finalize=True)
+        self.__window = sg.Window(
+            "ChatList", layout, size=(data.HEIGHT, data.WIDTH), finalize=True
+        )
         tmp = None
         while True:
             event, values = self.__window.read()
@@ -121,22 +248,37 @@ class ChatListDisplay(DisplayAbstract):
                         tmp = chat
             if event == "Info":
                 if tmp is not None:
-                    message = 'Chatname: '+tmp.name+'\nChatID: '+str(tmp.id)
+                    message = "Chatname: " + tmp.name + "\nChatID: " + str(tmp.id)
                     super().show_message(message)
-            if event == 'Exit':
+            if event == "Exit":
                 break
-            if event in (sg.WIN_CLOSED, 'Exit'):
+            if event in (sg.WIN_CLOSED, "Exit"):
                 break
         self.__window.close()
 
     #   Changes the chat's name
     def get_new_chat_name(self) -> str:
         layout = [
-            [sg.Text("New Chat Name:", size=(15, 1), font=data.FONT), sg.InputText(key="-CHATNAME-", font=data.FONT)],
-            [sg.Column([[sg.Button("Submit", size=(10, 1), font=data.FONT)]], justification='center')],
-            [sg.Column([[sg.Button("Cancel", size=(10, 1), font=data.FONT)]], justification='center')],
+            [
+                sg.Text("New Chat Name:", size=(15, 1), font=data.FONT),
+                sg.InputText(key="-CHATNAME-", font=data.FONT),
+            ],
+            [
+                sg.Column(
+                    [[sg.Button("Submit", size=(10, 1), font=data.FONT)]],
+                    justification="center",
+                )
+            ],
+            [
+                sg.Column(
+                    [[sg.Button("Cancel", size=(10, 1), font=data.FONT)]],
+                    justification="center",
+                )
+            ],
         ]
-        self.__window = sg.Window("Creating Chat", layout, size=(data.HEIGHT, data.WIDTH), finalize=True)
+        self.__window = sg.Window(
+            "Creating Chat", layout, size=(data.HEIGHT, data.WIDTH), finalize=True
+        )
         retval = ""
         while True:
             event, values = self.__window.read()
@@ -148,5 +290,5 @@ class ChatListDisplay(DisplayAbstract):
             elif event == sg.WIN_CLOSED:
                 raise ClosedProgramWindowError()
         self.__window.close()
-        #self.close()  # isn't working
+        # self.close()  # isn't working
         return retval

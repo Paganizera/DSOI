@@ -14,28 +14,30 @@ class DisplayAbstract(ABC):
     def show_options() -> str:
         pass
 
-    #@abstractmethod
+    # @abstractmethod
     def init_components(self) -> None:
         pass
-    
+
     # isn't working in UsersDisplay
     def close(self) -> None:
         if self.__window is not None:
-            print('closing window', self.__window)
+            print("closing window", self.__window)
             self.__window.close()
-            print('after close:', self.__window)
+            print("after close:", self.__window)
 
     def y_n_question(self, msg: str) -> bool:
         retval = sg.popup_yes_no(msg, title="Confirm", font=data.FONT)
         return retval == "Yes"
 
-    #delete
+    # delete
     def __clear_screen(self) -> None:
         call("cls" if system() == "Windows" else "clear", shell=True)
-    #delete
+
+    # delete
     def enter_to_continue(self) -> None:
         input("Press enter to continue...")
-    #delete
+
+    # delete
     def show_display_header(self, header: str) -> None:
         self.__clear_screen()
         n = 50
@@ -43,7 +45,7 @@ class DisplayAbstract(ABC):
         print("{:^{n}}".format(header, n=n))
         print("-" * n)
 
-    #delete
+    # delete
     def is_valid_input(self, _input: str | int, _range: range) -> bool:
         # checks the _range type
         if not isinstance(_range, range):

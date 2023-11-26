@@ -1,6 +1,7 @@
 from uuid import UUID, uuid4
 import hashlib
 
+
 class User:
     #   Constructor
     def __init__(self, nickname: str, password: str) -> None:

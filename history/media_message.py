@@ -13,5 +13,5 @@ class MediaMessage(BaseMessage):
         return self.__path
 
     @property
-    def filename(self)-> str:
+    def filename(self) -> str:
         return self.__filename

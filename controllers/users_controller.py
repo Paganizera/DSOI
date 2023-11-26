@@ -40,9 +40,9 @@ class UsersController(ControllersAbstract):
             "exit": self.exit,
         }
         options_not_logged = {
-            "login": self.login, 
-            "signup": self.sign_up, 
-            "exit": self.exit
+            "login": self.login,
+            "signup": self.sign_up,
+            "exit": self.exit,
         }
         #   Uses while to keep the code running
         while True:

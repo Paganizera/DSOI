@@ -6,6 +6,8 @@ from .controllers_abstract import ControllersAbstract
 from errors.custom_errors import ClosedProgramWindowError
 from pathlib import Path
 import os
+
+
 class App(ControllersAbstract):
     def __init__(self):
         #   Instantiates all controllers and also the mais
@@ -39,7 +41,7 @@ class App(ControllersAbstract):
 
     #   The first function to run in this app
     def start(self) -> None:
-        path = str(Path(__file__).parent.parent) + '/data'
+        path = str(Path(__file__).parent.parent) + "/data"
         if not os.path.isdir(path):
             os.mkdir(path)
         self.__users_controller.open_screen()
