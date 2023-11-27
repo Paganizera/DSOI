@@ -22,13 +22,16 @@ class UserNotFoundError(Exception):
     def __init__(self) -> None:
         super().__init__("The user wasn't found")
 
+
 class InvalidPassword(Exception):
     def __init__(self) -> None:
         super().__init__("The password is incorrect")
 
+
 class CloseChatError(Exception):
     def __init__(self) -> None:
         super().__init__("Chat closed")
+
 
 class CloseChatListError(Exception):
     def __init__(self) -> None:

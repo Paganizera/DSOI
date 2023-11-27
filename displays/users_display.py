@@ -6,7 +6,7 @@ from errors.custom_errors import ClosedProgramWindowError
 
 
 class UsersDisplay(DisplayAbstract):
-    def __main__(self) -> None:
+    def __init__(self) -> None:
         super().__init__()
 
     def init_components(self) -> None:

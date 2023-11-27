@@ -6,11 +6,10 @@ from PIL import Image
 
 
 class ChatMessagesDisplay(DisplayAbstract):
-    def __main__(self) -> None:
+    def __init__(self) -> None:
         super().__init__()
 
-    #   Shows available options
-    def init_components(self, messages: []) -> None:
+    def init_components(self, messages: list) -> None:
         lst = sg.Listbox(
             messages,
             size=(20, 4),
@@ -74,6 +73,7 @@ class ChatMessagesDisplay(DisplayAbstract):
             "Users Menu", layout, size=(data.HEIGHT, data.WIDTH), finalize=True
         )
 
+    #   Shows available options
     def show_options(self, messages: list[str], paths: list[str]) -> str:
         self.init_components(messages)
         while True:
@@ -125,7 +125,15 @@ class ChatMessagesDisplay(DisplayAbstract):
     def get_input_image(self) -> str | None:
         layout = [
             [sg.Text("Enter a filename:")],
-            [sg.FileBrowse(file_types=(("PNG Files", "*.png"),("JPEG Files", "*.jpg"),)),sg.Input(sg.user_settings_get_entry("-filename-", ""), key="-IN-")],
+            [
+                sg.FileBrowse(
+                    file_types=(
+                        ("PNG Files", "*.png"),
+                        ("JPEG Files", "*.jpg"),
+                    )
+                ),
+                sg.Input(sg.user_settings_get_entry("-filename-", ""), key="-IN-"),
+            ],
             [
                 sg.B("Save"),
                 sg.B("Exit Without Saving", key="Exit"),

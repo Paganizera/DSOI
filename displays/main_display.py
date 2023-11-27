@@ -5,8 +5,10 @@ from errors.custom_errors import ClosedProgramWindowError
 
 
 class MainDisplay(DisplayAbstract):
-    #   Option pannel for the mais display
-    def show_options(self) -> str:
+    def __init__(self) -> None:
+        super().__init__()
+
+    def init_components(self) -> None:
         layout = [
             [
                 sg.Text(
@@ -54,11 +56,15 @@ class MainDisplay(DisplayAbstract):
                 )
             ],
         ]
-        window = sg.Window(
+        self.__window = sg.Window(
             "Main Menu", layout, size=(data.HEIGHT, data.WIDTH), finalize=True
         )
+
+    #   Option pannel for the mais display
+    def show_options(self) -> str:
+        self.init_components()
         while True:
-            event, values = window.read()
+            event, values = self.__window.read()
             if event == "Ok":
                 if values["-USERS-"]:
                     retval = "users"
@@ -69,5 +75,5 @@ class MainDisplay(DisplayAbstract):
                 break
             elif event == sg.WIN_CLOSED:
                 raise ClosedProgramWindowError()
-        window.close()
+        self.__window.close()
         return retval

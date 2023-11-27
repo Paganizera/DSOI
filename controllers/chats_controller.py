@@ -312,7 +312,7 @@ class ChatsController(ControllersAbstract):
         self.__dao.update(self.__current_chat)
 
     #   Shows all messages from the current chat's ChatHistory
-    def get_messages(self, chat: Chat):
+    def get_messages(self, chat: Chat) -> tuple[list[str], list[str]]:
         messages = chat.chat_history.messages
         #   Different prints wheter the user who sent
         #   Still has an account or has no more

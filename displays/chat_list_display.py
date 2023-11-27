@@ -6,7 +6,7 @@ from errors.custom_errors import CloseChatListError
 
 
 class ChatListDisplay(DisplayAbstract):
-    def __main__(self) -> None:
+    def __init__(self) -> None:
         super().__init__()
 
     #   Shows available options
@@ -105,7 +105,7 @@ class ChatListDisplay(DisplayAbstract):
         return retval
 
     #   Shows all chats options and then returns the choosen one
-    def get_chat_index(self, chats: list[Chat]) -> int:
+    def get_chat_index(self, chats: list) -> int:
         chat_names = [x.name for x in chats]
         lst = sg.Listbox(
             chat_names,
@@ -157,7 +157,7 @@ class ChatListDisplay(DisplayAbstract):
 
     #   Shows all chats where the current user is
     #   For it to choose a chat
-    def get_user_chat_index(self, chats: list[Chat]) -> int:
+    def get_user_chat_index(self, chats: list) -> int:
         chat_names = [x.name for x in chats]
         lst = sg.Listbox(
             chat_names,
@@ -208,7 +208,7 @@ class ChatListDisplay(DisplayAbstract):
         return retval
 
     #   Show all chats where the user is in
-    def show_user_chats(self, chats: list[Chat]) -> None:
+    def show_user_chats(self, chats: list) -> None:
         chat_names = [x.name for x in chats]
         lst = sg.Listbox(
             chat_names,
