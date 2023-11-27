@@ -127,7 +127,7 @@ class ChatMessagesDisplay(DisplayAbstract):
             [sg.Text("Enter a filename:")],
             [sg.Input(sg.user_settings_get_entry("-filename-", ""), key="-IN-")],
             [
-                sg.FileBrowse(file_types=(("PNG Files", "*.png"),)),
+                sg.FileBrowse(file_types=(("PNG Files", "*.png"),("JPEG Files", "*.jpg"),)),
                 sg.B("Save"),
                 sg.B("Exit Without Saving", key="Exit"),
             ],
