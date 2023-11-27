@@ -2,7 +2,7 @@ from .display_abstract import DisplayAbstract
 from entities.chat import Chat
 import PySimpleGUI as sg
 from . import data
-from errors.custom_errors import ClosedProgramWindowError
+from errors.custom_errors import CloseChatListError
 
 
 class ChatListDisplay(DisplayAbstract):
@@ -99,7 +99,7 @@ class ChatListDisplay(DisplayAbstract):
                     retval = "exit"
                 break
             elif event == sg.WIN_CLOSED:
-                raise ClosedProgramWindowError()
+                raise CloseChatListError()
         self.__window.close()
         # self.close()  # isn't working
         return retval
@@ -288,7 +288,7 @@ class ChatListDisplay(DisplayAbstract):
             elif event == "Cancel":
                 break
             elif event == sg.WIN_CLOSED:
-                raise ClosedProgramWindowError()
+                raise CloseChatListError()
         self.__window.close()
         # self.close()  # isn't working
         return retval

@@ -6,7 +6,7 @@ from entities.chat import Chat
 from entities.user import User
 from displays.chat_list_display import ChatListDisplay
 from displays.chat_messages_display import ChatMessagesDisplay
-from errors.custom_errors import InvalidOptionError, ClosedProgramWindowError
+from errors.custom_errors import InvalidOptionError, CloseChatError, CloseChatListError
 from history.text_message import TextMessage
 from history.image_message import ImageMessage
 from daos.chat_dao import ChatDAO
@@ -75,9 +75,10 @@ class ChatsController(ControllersAbstract):
                 #   Active Chat
                 try:
                     option = self.__chat_list_display.show_options()
-                except ClosedProgramWindowError as e:
+                except CloseChatListError as e:
                     #   Catch error and then show it to the user
-                    self.__chat_list_display.show_error(str(e))
+                    self.__chat_list_display.show_message(str(e))
+                    return
                 else:
                     #   If there is no error, run the choosen function
                     chat_list_options[option]()
@@ -88,6 +89,9 @@ class ChatsController(ControllersAbstract):
                     option = self.__chat_messages_display.show_options(messages, paths)
                 except InvalidOptionError as e:
                     self.__chat_messages_display.show_error(str(e))
+                except CloseChatError as e:
+                    self.__chat_list_display.show_message(str(e))
+                    self.__current_chat = None
                 else:
                     if option == "exit":
                         self.__current_chat = None

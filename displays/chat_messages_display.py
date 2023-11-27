@@ -1,5 +1,5 @@
 from .display_abstract import DisplayAbstract
-from errors.custom_errors import ClosedProgramWindowError
+from errors.custom_errors import CloseChatError
 import PySimpleGUI as sg
 from . import data
 from PIL import Image
@@ -92,7 +92,7 @@ class ChatMessagesDisplay(DisplayAbstract):
                 retval = "openmessage"
             elif event == "View":
                 if values["-LIST-"] == []:
-                    super().show_message("Select a message")
+                    super().show_message("No message was selected")
                     continue
                 msg = values["-LIST-"][-1]
                 image = msg.split(" ")
@@ -107,7 +107,7 @@ class ChatMessagesDisplay(DisplayAbstract):
                 retval = "close"
                 break
             elif event == sg.WIN_CLOSED:
-                raise ClosedProgramWindowError()
+                raise CloseChatError()
         self.__window.close()
         # self.close()  # isn't working
         return retval
@@ -149,6 +149,6 @@ class ChatMessagesDisplay(DisplayAbstract):
                 retval = None
                 break
             elif event == sg.WIN_CLOSED:
-                raise ClosedProgramWindowError()
+                raise CloseChatError()
         self.__window.close()
         return retval
